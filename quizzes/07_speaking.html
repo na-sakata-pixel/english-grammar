@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 発話 — 現在・過去・未来 | English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0e0f13;
+  --surface: #16181f;
+  --sf2:     #1c1f29;
+  --border:  #2a2d38;
+  --accent:  #c8a96e;
+  --cat:     #a87ec9;
+  --cat2:    #7eb8c9;
+  --green:   #7ec9a0;
+  --red:     #c97e7e;
+  --text:    #e8e6e0;
+  --muted:   #6b6f7e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;font-weight:300;
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;z-index:0;
+}
+
+/* NAV */
+nav{
+  position:relative;z-index:10;
+  padding:16px 40px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;
+}
+.nav-left{display:flex;align-items:center;gap:12px}
+nav a{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;transition:color .2s}
+nav a:hover{color:var(--accent)}
+.nav-sep{color:var(--border)}
+.nav-steps{display:flex;gap:6px}
+.step-dot{font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .2s}
+.step-dot.active{background:var(--cat);color:#0e0f13;border-color:var(--cat);font-weight:600}
+.step-dot:hover:not(.active){border-color:var(--cat);color:var(--cat)}
+
+/* HEADER */
+.sp-header{
+  position:relative;z-index:1;
+  padding:36px 40px 28px;border-bottom:1px solid var(--border);
+  display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px;
+}
+.unit-badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cat);letter-spacing:.2em;margin-bottom:6px}
+.sp-title{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700}
+.sp-sub{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:4px}
+
+/* BROWSER WARNING */
+.browser-warn{
+  position:relative;z-index:1;
+  margin:20px 40px;background:rgba(200,169,110,.08);
+  border:1px solid rgba(200,169,110,.3);border-radius:8px;
+  padding:12px 18px;font-size:.82rem;color:var(--accent);
+  display:none;
+}
+.browser-warn.show{display:block}
+
+/* PROGRESS */
+.sp-progress{position:relative;z-index:1;padding:16px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px}
+.p-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)}
+.p-track{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.p-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--cat),var(--cat2));border-radius:2px;transition:width .5s ease}
+.p-count{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--cat)}
+
+/* SCORE ROW */
+.score-row{position:relative;z-index:1;padding:10px 40px;border-bottom:1px solid var(--border);display:flex;gap:24px;flex-wrap:wrap}
+.score-item{display:flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:.7rem}
+.score-dot{width:8px;height:8px;border-radius:50%}
+.dot-ok{background:var(--green)}
+.dot-ng{background:var(--red)}
+.dot-skip{background:var(--muted)}
+.score-num{font-weight:600}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:40px 40px 80px}
+
+/* QUESTION CARD */
+.q-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--cat);border-radius:12px;
+  padding:32px 28px;margin-bottom:24px;
+  animation:fadeIn .4s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.q-meta{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);letter-spacing:.1em;margin-bottom:12px}
+.q-jp{font-size:1.4rem;font-weight:500;line-height:1.6;margin-bottom:6px}
+.q-note{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+
+/* HINT (answer structure) */
+.hint-box{
+  background:var(--sf2);border:1px solid var(--border);border-radius:6px;
+  padding:12px 16px;margin:16px 0;
+  font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:var(--muted);line-height:1.8;
+  display:none;
+}
+.hint-box.show{display:block}
+.hint-box .ans-preview{color:var(--accent)}
+
+/* MIC AREA */
+.mic-area{display:flex;flex-direction:column;align-items:center;gap:20px;padding:16px 0}
+
+.mic-btn{
+  width:80px;height:80px;border-radius:50%;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;position:relative;
+  background:var(--surface);
+  border:2px solid var(--border);
+}
+.mic-btn:hover{border-color:var(--cat);transform:scale(1.05)}
+.mic-btn.listening{
+  background:rgba(168,126,201,.15);
+  border-color:var(--cat);
+  animation:pulse 1.2s ease-in-out infinite;
+}
+.mic-btn.listening .mic-icon{color:var(--cat)}
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(168,126,201,.4)}
+  50%{box-shadow:0 0 0 16px rgba(168,126,201,0)}
+}
+.mic-icon{font-size:2rem;transition:color .2s;color:var(--muted)}
+.mic-label{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);letter-spacing:.08em;text-align:center}
+
+/* TRANSCRIPT BOX */
+.transcript-box{
+  background:var(--sf2);border:1.5px solid var(--border);border-radius:8px;
+  padding:14px 18px;min-height:52px;width:100%;
+  font-size:.95rem;color:var(--text);line-height:1.6;
+  transition:border-color .3s;
+  font-style:italic;
+}
+.transcript-box.has-text{font-style:normal}
+.transcript-box.listening{border-color:var(--cat)}
+
+/* FEEDBACK */
+.feedback{
+  border-radius:8px;padding:14px 18px;
+  display:none;margin-top:4px;
+  font-size:.88rem;line-height:1.7;
+}
+.feedback.show{display:block}
+.feedback.correct{
+  background:rgba(126,201,160,.1);border:1px solid rgba(126,201,160,.35);
+}
+.feedback.wrong{
+  background:rgba(201,126,126,.1);border:1px solid rgba(201,126,126,.35);
+}
+.fb-head{font-weight:500;margin-bottom:4px;display:flex;align-items:center;gap:8px}
+.fb-correct-ans{font-family:'JetBrains Mono',monospace;font-size:.82rem;color:var(--accent);margin-top:4px}
+.fb-yours{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);margin-top:2px}
+
+/* KEYWORD PILLS */
+.keyword-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.kw-pill{
+  padding:3px 10px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:.68rem;
+  border:1px solid var(--border);color:var(--muted);
+}
+.kw-pill.matched{background:rgba(126,201,160,.1);border-color:var(--green);color:var(--green)}
+.kw-pill.missing{background:rgba(201,126,126,.08);border-color:var(--red);color:var(--red)}
+
+/* ACTION ROW */
+.action-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:20px}
+.btn{padding:10px 22px;border-radius:6px;border:none;font-size:.85rem;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--cat);color:#0e0f13}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+.btn-hint{background:rgba(200,169,110,.1);color:var(--accent);border:1px solid rgba(200,169,110,.25)}
+.btn-hint:hover{background:rgba(200,169,110,.2)}
+
+/* RESULT DOT ROW */
+.result-dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.r-dot{
+  width:10px;height:10px;border-radius:50%;
+  background:var(--border);transition:background .3s;
+}
+.r-dot.ok{background:var(--green)}
+.r-dot.ng{background:var(--red)}
+.r-dot.skip{background:var(--muted)}
+.r-dot.current{background:var(--cat);box-shadow:0 0 6px rgba(168,126,201,.6)}
+
+/* SCORE SCREEN */
+.score-screen{
+  position:relative;z-index:1;
+  max-width:720px;margin:0 auto;padding:48px 40px;
+  display:none;text-align:center;
+}
+.score-screen.show{display:block}
+.score-circle{
+  width:120px;height:120px;border-radius:50%;
+  border:2px solid var(--cat);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  margin:0 auto 24px;
+}
+.score-big{font-family:'Playfair Display',serif;font-size:2.6rem;font-weight:700;color:var(--cat);line-height:1}
+.score-denom{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+.score-msg{font-size:1rem;margin-bottom:32px;color:var(--text)}
+.review-list{text-align:left;margin-bottom:32px;display:flex;flex-direction:column;gap:10px}
+.review-item{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.85rem}
+.review-item.ok{border-left:3px solid var(--green)}
+.review-item.ng{border-left:3px solid var(--red)}
+.review-item.skip{border-left:3px solid var(--muted)}
+.rv-jp{color:var(--muted);font-size:.78rem;margin-bottom:4px}
+.rv-ans{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent)}
+.rv-yours{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)}
+.btn-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-a{padding:11px 28px;background:var(--cat);color:#0e0f13;border:none;border-radius:6px;font-size:.88rem;font-weight:500;cursor:pointer}
+.btn-a:hover{opacity:.85}
+.btn-b{padding:11px 28px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:.88rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-b:hover{color:var(--text);border-color:var(--text)}
+
+@media(max-width:600px){
+  nav,main,.sp-header,.sp-progress,.score-row,.score-screen,.browser-warn{padding-left:20px;padding-right:20px}
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="nav-left">
+    <a href="../index.html">English Grammar</a>
+    <span class="nav-sep">/</span>
+    <a href="07_explain.html">Unit 07</a>
+    <span class="nav-sep">/</span>
+    <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.7rem">発話</span>
+  </div>
+  <div class="nav-steps">
+    <a class="step-dot" href="07_explain.html">① 説明</a>
+    <a class="step-dot" href="07_present_future.html">② クイズ</a>
+    <a class="step-dot active" href="07_speaking.html">③ 発話</a>
+    <a class="step-dot" href="07_pair.html">④ ペア</a>
+  </div>
+</nav>
+
+<div class="browser-warn" id="browser-warn">
+  ⚠️ このブラウザは音声認識に対応していない可能性があります。<strong>Google Chrome</strong> での使用を推奨します。
+</div>
+
+<div class="sp-header">
+  <div>
+    <div class="unit-badge">UNIT 07 — SPEAKING</div>
+    <div class="sp-title">発話アクティビティ</div>
+    <div class="sp-sub">Speaking Practice — Present / Past / Future</div>
+  </div>
+  <div style="text-align:right">
+    <div class="result-dots" id="result-dots"></div>
+    <div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);margin-top:6px">● 正解　● 不正解　● スキップ</div>
+  </div>
+</div>
+
+<div class="sp-progress">
+  <div class="p-label">PROGRESS</div>
+  <div class="p-track"><div class="p-fill" id="p-fill"></div></div>
+  <div class="p-count" id="p-count">1 / 12</div>
+</div>
+
+<div class="score-row">
+  <div class="score-item"><div class="score-dot dot-ok"></div><span class="score-num" id="sc-ok">0</span> 正解</div>
+  <div class="score-item"><div class="score-dot dot-ng"></div><span class="score-num" id="sc-ng">0</span> 不正解</div>
+  <div class="score-item"><div class="score-dot dot-skip"></div><span class="score-num" id="sc-skip">0</span> スキップ</div>
+</div>
+
+<!-- QUIZ AREA -->
+<main id="main-area">
+  <div class="q-card" id="q-card">
+    <div class="q-meta" id="q-meta">QUESTION 1 / 12 — 現在形</div>
+    <div class="q-jp" id="q-jp">Loading...</div>
+    <div class="q-note" id="q-note"></div>
+
+    <div class="hint-box" id="hint-box">
+      <div>💡 ヒント：</div>
+      <div class="ans-preview" id="hint-preview"></div>
+    </div>
+
+    <div class="mic-area">
+      <div>
+        <button class="mic-btn" id="mic-btn" onclick="toggleMic()">
+          <span class="mic-icon" id="mic-icon">🎤</span>
+        </button>
+        <div class="mic-label" id="mic-label">タップして話す</div>
+      </div>
+      <div class="transcript-box" id="transcript">ここに認識された英語が表示されます...</div>
+    </div>
+
+    <div class="feedback" id="feedback">
+      <div class="fb-head" id="fb-head"></div>
+      <div class="fb-correct-ans" id="fb-ans"></div>
+      <div class="fb-yours" id="fb-yours"></div>
+      <div class="keyword-pills" id="kw-pills"></div>
+    </div>
+
+    <div class="action-row">
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn btn-hint" onclick="showHint()" id="hint-btn">💡 ヒント</button>
+        <button class="btn btn-ghost" onclick="skipQ()" id="skip-btn">スキップ</button>
+      </div>
+      <button class="btn btn-primary" id="next-btn" style="display:none" onclick="nextQ()">次へ →</button>
+    </div>
+  </div>
+</main>
+
+<!-- SCORE SCREEN -->
+<div class="score-screen" id="score-screen">
+  <div class="score-circle">
+    <div class="score-big" id="s-num"></div>
+    <div class="score-denom" id="s-denom"></div>
+  </div>
+  <div class="score-msg" id="s-msg"></div>
+  <div class="review-list" id="review-list"></div>
+  <div class="btn-row">
+    <button class="btn-a" onclick="restart()">もう一度</button>
+    <a class="btn-b" href="07_pair.html">④ ペアワークへ →</a>
+    <a class="btn-b" href="../index.html">← トップへ</a>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// QUIZ DATA
+// keywords: 正解判定に使うキーワード（部分一致）
+// answer:   模範解答（表示用）
+// hint:     構造ヒント
+// ══════════════════════════════════════════
+const questions = [
+  // 現在形
+  { tense:'現在形', jp:'私は毎朝7時に起きます。',
+    answer:'I wake up at seven every morning.',
+    keywords:['wake','seven','every','morning'],
+    hint:'I wake up at ... every morning.' },
+  { tense:'現在形', jp:'彼女は大阪の大学で英語を教えています。',
+    answer:'She teaches English at a university in Osaka.',
+    keywords:['teaches','english','university','osaka'],
+    hint:'She teaches ... at a university in ...' },
+  { tense:'現在形', jp:'私の父は毎週末ゴルフをします。',
+    answer:'My father plays golf every weekend.',
+    keywords:['father','plays','golf','weekend'],
+    hint:'My father plays ... every ...' },
+  { tense:'現在形', jp:'水は100度で沸騰します。',
+    answer:'Water boils at one hundred degrees.',
+    keywords:['water','boils','hundred','degrees'],
+    hint:'Water boils at ...' },
+  // 過去形
+  { tense:'過去形', jp:'私は昨日友人と映画を見ました。',
+    answer:'I watched a movie with my friend yesterday.',
+    keywords:['watched','movie','friend','yesterday'],
+    hint:'I watched ... with my friend yesterday.' },
+  { tense:'過去形', jp:'彼らは先週京都を訪れました。',
+    answer:'They visited Kyoto last week.',
+    keywords:['visited','kyoto','last','week'],
+    hint:'They visited ... last week.' },
+  { tense:'過去形', jp:'彼女は昨夜遅くまで仕事をしました。',
+    answer:'She worked late last night.',
+    keywords:['worked','late','last','night'],
+    hint:'She worked late ...' },
+  { tense:'過去形', jp:'私は子供の頃、毎日公園で遊びました。',
+    answer:'I played in the park every day when I was a child.',
+    keywords:['played','park','every','child'],
+    hint:'I played in the park every day when I was ...' },
+  // 未来形
+  { tense:'未来形', jp:'明日は晴れるでしょう。',
+    answer:'It will be sunny tomorrow.',
+    keywords:['will','sunny','tomorrow'],
+    hint:'It will be ... tomorrow.' },
+  { tense:'未来形', jp:'私は来年カナダに留学する予定です。',
+    answer:'I am going to study abroad in Canada next year.',
+    keywords:['going','study','canada','next','year'],
+    hint:"I'm going to study abroad in ... next year." },
+  { tense:'未来形', jp:'彼女は来月新しい仕事を始めます。',
+    answer:'She is going to start a new job next month.',
+    keywords:['going','start','job','next','month'],
+    hint:"She's going to start a new job next month." },
+  { tense:'未来形', jp:'私たちは今夜一緒に夕食を食べます。',
+    answer:'We will have dinner together tonight.',
+    keywords:['will','dinner','together','tonight'],
+    hint:'We will have dinner together tonight.' },
+];
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let current = 0;
+let results  = [];   // {status:'ok'|'ng'|'skip', transcript, q}
+let scOk=0, scNg=0, scSkip=0;
+let recognition = null;
+let listening   = false;
+
+// ── Build result dots ──
+function buildDots() {
+  const wrap = document.getElementById('result-dots');
+  wrap.innerHTML = '';
+  questions.forEach((_, i) => {
+    const d = document.createElement('div');
+    d.className = 'r-dot' + (i === current ? ' current' : '');
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  });
+}
+
+function setDot(i, status) {
+  const d = document.getElementById(`dot-${i}`);
+  if (!d) return;
+  d.className = 'r-dot ' + status;
+}
+
+// ── Load question ──
+function loadQ() {
+  const q = questions[current];
+  document.getElementById('q-meta').textContent =
+    `QUESTION ${current+1} / ${questions.length} — ${q.tense}`;
+  document.getElementById('q-jp').textContent = q.jp;
+  document.getElementById('q-note').textContent = '';
+  document.getElementById('transcript').textContent = 'ここに認識された英語が表示されます...';
+  document.getElementById('transcript').className = 'transcript-box';
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('hint-box').className = 'hint-box';
+  document.getElementById('next-btn').style.display = 'none';
+  document.getElementById('hint-btn').style.display = '';
+  document.getElementById('skip-btn').style.display = '';
+  document.getElementById('mic-btn').className = 'mic-btn';
+  document.getElementById('mic-label').textContent = 'タップして話す';
+  document.getElementById('kw-pills').innerHTML = '';
+
+  const pct = (current / questions.length) * 100;
+  document.getElementById('p-fill').style.width = pct + '%';
+  document.getElementById('p-count').textContent = `${current+1} / ${questions.length}`;
+
+  // update dots
+  buildDots();
+}
+
+// ── Hint ──
+function showHint() {
+  const q = questions[current];
+  document.getElementById('hint-preview').textContent = q.hint;
+  document.getElementById('hint-box').className = 'hint-box show';
+}
+
+// ── Speech Recognition ──
+function initSR() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('browser-warn').classList.add('show');
+    document.getElementById('mic-btn').style.opacity = '.4';
+    document.getElementById('mic-btn').style.cursor = 'not-allowed';
+    return false;
+  }
+  recognition = new SR();
+  recognition.lang = 'en-US';
+  recognition.continuous = false;
+  recognition.interimResults = true;
+
+  recognition.onstart = () => {
+    listening = true;
+    document.getElementById('mic-btn').classList.add('listening');
+    document.getElementById('mic-icon').textContent = '⏹';
+    document.getElementById('mic-label').textContent = '聞いています... （もう一度タップで停止）';
+    document.getElementById('transcript').classList.add('listening');
+    document.getElementById('transcript').textContent = '...';
+  };
+
+  recognition.onresult = (e) => {
+    let interim = '', final = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const t = e.results[i][0].transcript;
+      if (e.results[i].isFinal) final += t;
+      else interim += t;
+    }
+    document.getElementById('transcript').textContent = final || interim;
+    document.getElementById('transcript').classList.add('has-text');
+    if (final) evaluate(final.trim());
+  };
+
+  recognition.onerror = (e) => {
+    stopMic();
+    if (e.error === 'not-allowed') {
+      document.getElementById('browser-warn').innerHTML =
+        '⚠️ マイクへのアクセスが拒否されました。ブラウザの設定からマイクの許可をしてください。';
+      document.getElementById('browser-warn').classList.add('show');
+    }
+  };
+
+  recognition.onend = () => { stopMic(); };
+  return true;
+}
+
+function toggleMic() {
+  if (!recognition && !initSR()) return;
+  if (listening) { recognition.stop(); }
+  else {
+    try { recognition.start(); }
+    catch(e) { recognition = null; initSR(); recognition && recognition.start(); }
+  }
+}
+
+function stopMic() {
+  listening = false;
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('mic-icon').textContent = '🎤';
+  document.getElementById('mic-label').textContent = 'タップして話す';
+  document.getElementById('transcript').classList.remove('listening');
+}
+
+// ── Evaluate ──
+function evaluate(transcript) {
+  stopMic();
+  const q = questions[current];
+  const lower = transcript.toLowerCase();
+
+  // keyword match
+  const matched   = q.keywords.filter(k => lower.includes(k));
+  const missing   = q.keywords.filter(k => !lower.includes(k));
+  const score     = matched.length / q.keywords.length;
+  const isCorrect = score >= 0.75; // 75%以上のキーワードが含まれればOK
+
+  // show feedback
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  document.getElementById('fb-head').innerHTML =
+    isCorrect ? '✅ <span style="color:var(--green)">正解！よく言えました。</span>'
+              : '❌ <span style="color:var(--red)">もう一度確認しましょう。</span>';
+  document.getElementById('fb-ans').textContent = '模範解答: ' + q.answer;
+  document.getElementById('fb-yours').textContent = 'あなた: ' + transcript;
+
+  // keyword pills
+  const pillWrap = document.getElementById('kw-pills');
+  pillWrap.innerHTML = q.keywords.map(k =>
+    `<span class="kw-pill ${matched.includes(k)?'matched':'missing'}">${k}</span>`
+  ).join('');
+
+  // record
+  const status = isCorrect ? 'ok' : 'ng';
+  results.push({ status, transcript, q });
+  setDot(current, status);
+
+  if (isCorrect) { scOk++; document.getElementById('sc-ok').textContent = scOk; }
+  else           { scNg++; document.getElementById('sc-ng').textContent = scNg; }
+
+  document.getElementById('next-btn').style.display = '';
+  document.getElementById('hint-btn').style.display = 'none';
+  document.getElementById('skip-btn').style.display = 'none';
+}
+
+// ── Skip ──
+function skipQ() {
+  stopMic();
+  results.push({ status:'skip', transcript:'(スキップ)', q: questions[current] });
+  setDot(current, 'skip');
+  scSkip++; document.getElementById('sc-skip').textContent = scSkip;
+  nextQ();
+}
+
+// ── Next ──
+function nextQ() {
+  current++;
+  if (current >= questions.length) { showScore(); return; }
+  loadQ();
+  document.getElementById('q-card').style.animation = 'none';
+  requestAnimationFrame(()=>{
+    document.getElementById('q-card').style.animation = '';
+  });
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ── Score screen ──
+function showScore() {
+  document.getElementById('main-area').style.display = 'none';
+  const ss = document.getElementById('score-screen');
+  ss.classList.add('show');
+  document.getElementById('p-fill').style.width = '100%';
+  document.getElementById('p-count').textContent = 'Complete!';
+
+  document.getElementById('s-num').textContent = scOk;
+  document.getElementById('s-denom').textContent = `/ ${questions.length}`;
+
+  const pct = scOk / questions.length;
+  document.getElementById('s-msg').textContent =
+    pct === 1   ? '🏆 全問正解！すばらしい発音です！'
+    : pct >= .8 ? '🌟 とてもよくできました！'
+    : pct >= .6 ? '👍 まずまずです。もう一度挑戦してみましょう。'
+                : '📚 もう一度練習しましょう。';
+
+  const rl = document.getElementById('review-list');
+  rl.innerHTML = results.map((r, i) => `
+    <div class="review-item ${r.status}">
+      <div class="rv-jp">${i+1}. ${r.q.jp}</div>
+      <div class="rv-ans">✔ ${r.q.answer}</div>
+      <div class="rv-yours">${r.status==='skip'?'スキップ':'あなた: '+r.transcript}</div>
+    </div>
+  `).join('');
+
+  try { if(scOk >= questions.length * 0.6) localStorage.setItem('unit_7_speaking','1'); } catch(e){}
+  sendProgress({ unit:7, step:3, stepName:'発話', score:scOk, total:questions.length, elapsed:getElapsed() });
+}
+
+// ── Restart ──
+function restart() {
+  current=0; results=[]; scOk=0; scNg=0; scSkip=0;
+  ['sc-ok','sc-ng','sc-skip'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('main-area').style.display='block';
+  document.getElementById('score-screen').classList.remove('show');
+  loadQ();
+}
+
+// ── Init ──
+initSR();
+loadQ();
+</script>
+<script src="../progress.js"></script>
+</body>
+</html>

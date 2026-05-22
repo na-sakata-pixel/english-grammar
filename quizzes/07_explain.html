@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>07 説明 — 現在・過去・未来 | English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0e0f13;
+  --surface: #16181f;
+  --sf2:     #1c1f29;
+  --border:  #2a2d38;
+  --accent:  #c8a96e;
+  --cat:     #a87ec9;
+  --cat2:    #7eb8c9;
+  --green:   #7ec9a0;
+  --red:     #c97e7e;
+  --text:    #e8e6e0;
+  --muted:   #6b6f7e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;font-weight:300;
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;z-index:0;
+}
+
+/* NAV */
+nav{position:relative;z-index:10;padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.nav-links{display:flex;align-items:center;gap:12px}
+nav a{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:.05em;transition:color .2s}
+nav a:hover{color:var(--accent)}
+.nav-sep{color:var(--border)}
+.nav-steps{display:flex;gap:6px}
+.step-dot{
+  font-family:'JetBrains Mono',monospace;font-size:0.65rem;
+  padding:4px 10px;border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;transition:all .2s;
+}
+.step-dot.active{background:var(--cat);color:#0e0f13;border-color:var(--cat);font-weight:600}
+.step-dot:hover:not(.active){border-color:var(--cat);color:var(--cat)}
+
+/* HEADER */
+.unit-header{
+  position:relative;z-index:1;
+  padding:40px 40px 32px;border-bottom:1px solid var(--border);
+}
+.unit-badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cat);letter-spacing:.2em;margin-bottom:8px}
+.unit-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;line-height:1.1;margin-bottom:4px}
+.unit-sub{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);margin-bottom:16px}
+.unit-desc{font-size:.9rem;color:#c0bdb5;max-width:640px;line-height:1.8}
+
+/* PROGRESS STEPS */
+.lesson-progress{
+  position:relative;z-index:1;
+  padding:20px 40px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;overflow-x:auto;
+}
+.lp-step{
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--muted);white-space:nowrap;padding:0 12px;
+}
+.lp-step:first-child{padding-left:0}
+.lp-dot{
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;transition:all .3s;
+}
+.lp-step.done .lp-dot{background:var(--green);border-color:var(--green);color:#0e0f13}
+.lp-step.current .lp-dot{background:var(--cat);border-color:var(--cat);color:#0e0f13;font-weight:700}
+.lp-line{flex:1;height:1px;background:var(--border);min-width:20px}
+.lp-step.done + .lp-line{background:var(--green)}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:48px 40px 80px}
+
+/* SECTION BLOCKS */
+.section{margin-bottom:56px;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.15em;margin-bottom:6px}
+.section-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--cat);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.prose{font-size:.92rem;line-height:2;color:#c8c5bc;margin-bottom:16px}
+.prose strong{color:var(--text);font-weight:500}
+.prose em{color:var(--accent);font-style:normal;font-weight:500}
+
+/* KEY POINT BOX */
+.keybox{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--cat);border-radius:8px;
+  padding:18px 20px;margin:20px 0;
+}
+.keybox-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--cat);letter-spacing:.15em;margin-bottom:8px}
+.keybox-text{font-size:.9rem;line-height:1.8;color:var(--text)}
+
+/* TIMELINE DIAGRAM */
+.timeline{
+  display:flex;align-items:center;gap:0;
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:24px 28px;margin:20px 0;overflow-x:auto;
+}
+.tl-item{text-align:center;flex:1;min-width:90px}
+.tl-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);margin-bottom:8px}
+.tl-circle{
+  width:40px;height:40px;border-radius:50%;border:2px solid var(--border);
+  margin:0 auto 8px;display:flex;align-items:center;justify-content:center;
+  font-size:.7rem;font-family:'JetBrains Mono',monospace;color:var(--muted);
+  transition:all .4s;cursor:default;
+}
+.tl-circle.past{border-color:#7eb8c9;color:#7eb8c9}
+.tl-circle.present{border-color:var(--cat);background:var(--cat);color:#0e0f13;font-weight:700}
+.tl-circle.future{border-color:var(--green);color:var(--green)}
+.tl-name{font-size:.78rem;font-weight:500}
+.tl-en{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted)}
+.tl-arrow{color:var(--border);font-size:1.2rem;padding:0 4px;padding-bottom:16px}
+
+/* EXAMPLE TABLE */
+.ex-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.85rem}
+.ex-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  color:var(--muted);text-align:left;padding:8px 12px;
+  border-bottom:1px solid var(--border);font-weight:400;
+}
+.ex-table td{padding:10px 12px;border-bottom:1px solid rgba(42,45,56,.5);line-height:1.5}
+.ex-table tr:last-child td{border-bottom:none}
+.ex-table .tense{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+.ex-table .form{color:var(--accent);font-weight:500}
+.ex-table .jp{color:var(--muted);font-size:.78rem}
+
+/* ── INTERACTIVE ELEMENTS ── */
+
+/* 1. Matching / click to reveal */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.match-jp{
+  background:var(--sf2);border:1px solid var(--border);border-radius:6px;
+  padding:12px 16px;font-size:.85rem;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  display:flex;flex-direction:column;gap:4px;
+}
+.match-jp:hover{border-color:var(--cat)}
+.match-jp .jp-text{color:var(--text)}
+.match-jp .reveal{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:transparent;background:var(--border);border-radius:3px;
+  transition:color .3s,background .3s;padding:2px 6px;align-self:flex-start;
+}
+.match-jp.shown .reveal{color:var(--accent);background:rgba(200,169,110,.1)}
+.match-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);margin-bottom:4px;letter-spacing:.1em}
+
+/* 2. Fill-in-the-blank */
+.fill-sentence{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:20px 24px;margin:12px 0;display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  font-size:.95rem;line-height:2;
+}
+.blank{
+  display:inline-block;min-width:120px;
+  border-bottom:2px solid var(--cat);padding:2px 8px;
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;
+  color:var(--text);background:transparent;
+  outline:none;text-align:center;
+  transition:border-color .2s;
+}
+.blank:focus{border-color:var(--accent)}
+.blank.correct{border-color:var(--green);color:var(--green)}
+.blank.wrong{border-color:var(--red);color:var(--red)}
+.fill-hint{font-size:.75rem;color:var(--muted);margin-left:4px}
+.fill-check-btn{
+  margin-top:16px;padding:8px 20px;background:var(--cat);
+  color:#0e0f13;border:none;border-radius:6px;
+  font-family:'Noto Sans JP',sans-serif;font-size:.82rem;font-weight:500;
+  cursor:pointer;transition:opacity .2s;
+}
+.fill-check-btn:hover{opacity:.85}
+
+/* 3. Sort / word order */
+.sort-area{margin:20px 0}
+.sort-tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;margin-bottom:12px}
+.sort-bank{display:flex;flex-wrap:wrap;gap:8px;padding:16px;background:var(--sf2);border:1px dashed var(--border);border-radius:8px;min-height:52px}
+.tile{
+  padding:6px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:var(--text);cursor:pointer;transition:all .2s;user-select:none;
+}
+.tile:hover{border-color:var(--cat);color:var(--cat)}
+.tile.placed{background:rgba(168,126,201,.1);border-color:var(--cat);color:var(--cat)}
+.sort-result{font-size:.8rem;padding:8px 12px;border-radius:6px;display:none;margin-top:8px}
+.sort-result.ok{background:rgba(126,201,160,.1);border:1px solid rgba(126,201,160,.3);color:var(--green);display:block}
+.sort-result.ng{background:rgba(201,126,126,.1);border:1px solid rgba(201,126,126,.3);color:var(--red);display:block}
+
+/* 4. Choice check */
+.choice-q{margin:16px 0}
+.choice-q .q-text{font-size:.9rem;margin-bottom:10px;color:var(--text)}
+.choice-opts{display:flex;flex-direction:column;gap:8px}
+.choice-opt{
+  background:var(--sf2);border:1.5px solid var(--border);border-radius:6px;
+  padding:10px 16px;font-size:.85rem;cursor:pointer;
+  transition:all .2s;text-align:left;color:var(--text);
+  display:flex;gap:10px;align-items:center;
+}
+.choice-opt:hover:not(:disabled){border-color:var(--cat)}
+.choice-opt.correct{border-color:var(--green);background:rgba(126,201,160,.08);color:var(--green)}
+.choice-opt.wrong{border-color:var(--red);background:rgba(201,126,126,.08);color:var(--red)}
+.opt-key{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);min-width:16px}
+
+/* SECTION DIVIDER */
+.s-divider{height:1px;background:var(--border);margin:40px 0}
+
+/* NEXT BUTTON */
+.next-section-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;background:transparent;
+  border:1px solid var(--cat);border-radius:6px;
+  color:var(--cat);font-family:'Noto Sans JP',sans-serif;
+  font-size:.88rem;font-weight:500;cursor:pointer;
+  transition:all .2s;margin-top:8px;
+}
+.next-section-btn:hover{background:var(--cat);color:#0e0f13}
+.next-section-btn:disabled{opacity:.3;cursor:default}
+
+/* COMPLETION BANNER */
+.completion{
+  background:linear-gradient(135deg,rgba(168,126,201,.15),rgba(126,201,160,.1));
+  border:1px solid var(--cat);border-radius:12px;
+  padding:32px;text-align:center;display:none;margin-top:32px;
+}
+.completion.show{display:block}
+.completion h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:8px}
+.completion p{color:var(--muted);font-size:.88rem;margin-bottom:24px}
+.completion-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:11px 28px;background:var(--cat);color:#0e0f13;border:none;border-radius:6px;font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{padding:11px 28px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:.88rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+
+@media(max-width:600px){
+  nav,main,.unit-header,.lesson-progress{padding-left:20px;padding-right:20px}
+  .match-grid{grid-template-columns:1fr}
+  .timeline{padding:16px}
+}
+</style>
+
+</head>
+<body>
+
+<nav>
+  <div class="nav-links">
+    <a href="../index.html">English Grammar</a>
+    <span class="nav-sep">/</span>
+    <a href="#">Unit 07</a>
+    <span class="nav-sep">/</span>
+    <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.7rem">説明</span>
+  </div>
+  <div class="nav-steps">
+    <a class="step-dot active" href="07_explain.html">① 説明</a>
+    <a class="step-dot" href="07_present_future.html">② クイズ</a>
+    <a class="step-dot" href="07_speaking.html">③ 発話</a>
+    <a class="step-dot" href="07_pair.html">④ ペア</a>
+  </div>
+</nav>
+
+<div class="unit-header">
+  <div class="unit-badge">UNIT 07 — VERBS</div>
+  <div class="unit-title">現在・過去・未来</div>
+  <div class="unit-sub">Present / Past / Future Tense</div>
+  <div class="unit-desc">英語の時制は「動詞の形」で表します。いつの出来事かを、文のどこに置くかではなく、動詞そのものの変化で示すのが英語の基本ルールです。</div>
+</div>
+
+<div class="lesson-progress">
+  <div class="lp-step current" id="lp1"><div class="lp-dot">1</div>時制とは</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp2"><div class="lp-dot">2</div>3つの時制</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp3"><div class="lp-dot">3</div>形の確認</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp4"><div class="lp-dot">4</div>文を作る</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp5"><div class="lp-dot">5</div>並べ替え</div>
+</div>
+
+<main>
+
+<!-- ════ SECTION 1：時制とは ════ -->
+<div class="section visible" id="sec1">
+  <div class="section-num">SECTION 1 / 5</div>
+  <div class="section-title">時制とは何か</div>
+
+  <p class="prose">
+    日本語では「食べる・食べた・食べるだろう」のように語尾が変わりますが、
+    文のどこに置いてもOKです。英語は違います。<strong>時制は必ず動詞の形で示さなければなりません。</strong>
+  </p>
+
+  <div class="keybox">
+    <div class="keybox-label">KEY POINT</div>
+    <div class="keybox-text">
+      英語 → <em>動詞の形</em>が時制を決める<br>
+      日本語 → 語尾＋時間の副詞（昨日・明日）で時制を示す
+    </div>
+  </div>
+
+  <p class="prose">下の文を見て、動詞がどう変わるか確認してください。クリックすると英語が表示されます。</p>
+
+  <div class="match-label">TAP TO REVEAL — 日本語 → 英語</div>
+  <div class="match-grid">
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私は毎日走ります。（現在）</div>
+      <div class="reveal">I <strong>run</strong> every day.</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私は昨日走りました。（過去）</div>
+      <div class="reveal">I <strong>ran</strong> yesterday.</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私は明日走ります。（未来）</div>
+      <div class="reveal">I <strong>will run</strong> tomorrow.</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">彼女は毎朝歌います。（現在）</div>
+      <div class="reveal">She <strong>sings</strong> every morning.</div>
+    </div>
+  </div>
+
+  <button class="next-section-btn" onclick="goSection(2)">次へ：3つの時制 →</button>
+</div>
+
+<!-- ════ SECTION 2：3つの時制 ════ -->
+<div class="section" id="sec2">
+  <div class="section-num">SECTION 2 / 5</div>
+  <div class="section-title">3つの時制を整理する</div>
+
+  <p class="prose">英語の基本時制は3つです。時間の流れのどこにいるかをイメージしてください。</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-label">PAST</div>
+      <div class="tl-circle past">過</div>
+      <div class="tl-name">過去形</div>
+      <div class="tl-en">Past Simple</div>
+    </div>
+    <div class="tl-arrow">──▶</div>
+    <div class="tl-item">
+      <div class="tl-label">NOW</div>
+      <div class="tl-circle present">現</div>
+      <div class="tl-name">現在形</div>
+      <div class="tl-en">Present Simple</div>
+    </div>
+    <div class="tl-arrow">──▶</div>
+    <div class="tl-item">
+      <div class="tl-label">FUTURE</div>
+      <div class="tl-circle future">未</div>
+      <div class="tl-name">未来形</div>
+      <div class="tl-en">will / be going to</div>
+    </div>
+  </div>
+
+  <table class="ex-table">
+    <thead>
+      <tr><th>時制</th><th>形</th><th>例文</th><th>用途</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="tense">現在</td>
+        <td class="form">動詞の原形<br>(三単現は+s)</td>
+        <td>She <strong>lives</strong> in Osaka.</td>
+        <td class="jp">習慣・事実・状態</td>
+      </tr>
+      <tr>
+        <td class="tense">過去</td>
+        <td class="form">動詞の過去形<br>(-ed / 不規則)</td>
+        <td>She <strong>lived</strong> in Tokyo.</td>
+        <td class="jp">過去の出来事・状態</td>
+      </tr>
+      <tr>
+        <td class="tense">未来</td>
+        <td class="form">will + 原形<br>be going to + 原形</td>
+        <td>She <strong>will live</strong> in Kyoto.</td>
+        <td class="jp">予測・計画・意志</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="keybox">
+    <div class="keybox-label">will vs be going to</div>
+    <div class="keybox-text">
+      <strong>will</strong> → その場での決定・予測「〜するだろう」<br>
+      <strong>be going to</strong> → 前から決まっていた計画・根拠のある予測
+    </div>
+  </div>
+
+  <!-- CHOICE CHECK -->
+  <p class="prose" style="margin-top:24px">理解度チェック。正しいものを選んでください。</p>
+
+  <div class="choice-q" id="cq1">
+    <div class="q-text">「昨日、私は映画を見た」を英語にするとき、動詞はどの形？</div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkChoice('cq1',this,false)"><span class="opt-key">A</span>watch（原形）</button>
+      <button class="choice-opt" onclick="checkChoice('cq1',this,true)"><span class="opt-key">B</span>watched（過去形）</button>
+      <button class="choice-opt" onclick="checkChoice('cq1',this,false)"><span class="opt-key">C</span>will watch（未来）</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="cq2">
+    <div class="q-text">「太陽は東から昇る」— これは何時制が正しい？</div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkChoice('cq2',this,true)"><span class="opt-key">A</span>現在形（不変の事実）</button>
+      <button class="choice-opt" onclick="checkChoice('cq2',this,false)"><span class="opt-key">B</span>未来形（これからも起こるから）</button>
+      <button class="choice-opt" onclick="checkChoice('cq2',this,false)"><span class="opt-key">C</span>過去形（ずっと昔からそうだから）</button>
+    </div>
+  </div>
+
+  <button class="next-section-btn" id="btn-sec3" onclick="goSection(3)" disabled>次へ：形の確認 →</button>
+</div>
+
+<!-- ════ SECTION 3：形の確認 ════ -->
+<div class="section" id="sec3">
+  <div class="section-num">SECTION 3 / 5</div>
+  <div class="section-title">動詞の形を確認する</div>
+
+  <p class="prose">空欄に正しい動詞の形を入れてください。送信後に正誤が表示されます。</p>
+
+  <div class="fill-sentence" id="fill1">
+    She <input class="blank" data-ans="studies" placeholder="study→?" id="f1"> English every day.
+    <span class="fill-hint">（毎日 → 現在形・三単現）</span>
+  </div>
+  <div class="fill-sentence" id="fill2">
+    We <input class="blank" data-ans="visited" placeholder="visit→?" id="f2"> Kyoto last year.
+    <span class="fill-hint">（昨年 → 過去形）</span>
+  </div>
+  <div class="fill-sentence" id="fill3">
+    It <input class="blank" data-ans="will rain" placeholder="rain→未来" id="f3"> tomorrow.
+    <span class="fill-hint">（明日 → will）</span>
+  </div>
+  <div class="fill-sentence" id="fill4">
+    He <input class="blank" data-ans="goes" placeholder="go→?" id="f4"> to the gym on Sundays.
+    <span class="fill-hint">（毎週日曜 → 現在形・三単現）</span>
+  </div>
+
+  <button class="fill-check-btn" onclick="checkFills()">答え合わせ</button>
+
+  <button class="next-section-btn" id="btn-sec4" onclick="goSection(4)" disabled style="margin-top:20px">次へ：文を作る →</button>
+</div>
+
+<!-- ════ SECTION 4：文を作る ════ -->
+<div class="section" id="sec4">
+  <div class="section-num">SECTION 4 / 5</div>
+  <div class="section-title">時制を選んで文を作る</div>
+
+  <p class="prose">日本語の意味に合う時制を選んでください。正解すると次の問題へ進みます。</p>
+
+  <!-- Q1 -->
+  <div class="choice-q" id="sq1">
+    <div class="q-text">「私の兄は福岡に住んでいます。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">My brother ___ in Fukuoka.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,false)"><span class="opt-key">A</span>lived</button>
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,true)"><span class="opt-key">B</span>lives</button>
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,false)"><span class="opt-key">C</span>will live</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="sq2" style="display:none">
+    <div class="q-text">「彼女は昨夜遅くまで仕事をしました。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">She ___ late last night.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,false)"><span class="opt-key">A</span>works</button>
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,false)"><span class="opt-key">B</span>will work</button>
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,true)"><span class="opt-key">C</span>worked</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="sq3" style="display:none">
+    <div class="q-text">「私たちは来月新しいプロジェクトを始めます。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">We ___ a new project next month.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,false)"><span class="opt-key">A</span>started</button>
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,true)"><span class="opt-key">B</span>will start</button>
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,false)"><span class="opt-key">C</span>starts</button>
+    </div>
+  </div>
+
+  <button class="next-section-btn" id="btn-sec5" onclick="goSection(5)" disabled style="margin-top:8px">次へ：並べ替え →</button>
+</div>
+
+<!-- ════ SECTION 5：並べ替え ════ -->
+<div class="section" id="sec5">
+  <div class="section-num">SECTION 5 / 5</div>
+  <div class="section-title">語句を並べ替えて文を作る</div>
+
+  <p class="prose">タイルをクリックして正しい語順に並べてください。</p>
+
+  <!-- Sort Q1 -->
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">「彼は2年前に東京に引っ越しました。」</p>
+  <div class="sort-area" id="sort1">
+    <div class="sort-tiles" id="sort1-answer"></div>
+    <div class="sort-bank" id="sort1-bank"></div>
+    <div class="sort-result" id="sort1-result"></div>
+    <button class="fill-check-btn" onclick="checkSort('sort1',['He','moved','to','Tokyo','two','years','ago','.'])">確認</button>
+    <button class="fill-check-btn" style="background:var(--sf2);color:var(--muted);margin-left:8px" onclick="resetSort('sort1')">リセット</button>
+  </div>
+
+  <div class="s-divider"></div>
+
+  <!-- Sort Q2 -->
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">「私の姉は来年カナダに行く予定です。」</p>
+  <div class="sort-area" id="sort2">
+    <div class="sort-tiles" id="sort2-answer"></div>
+    <div class="sort-bank" id="sort2-bank"></div>
+    <div class="sort-result" id="sort2-result"></div>
+    <button class="fill-check-btn" onclick="checkSort('sort2',['My','sister','is','going','to','go','to','Canada','next','year','.'])">確認</button>
+    <button class="fill-check-btn" style="background:var(--sf2);color:var(--muted);margin-left:8px" onclick="resetSort('sort2')">リセット</button>
+  </div>
+
+  <button class="next-section-btn" id="btn-complete" onclick="complete()" style="margin-top:16px">説明を完了する ✓</button>
+</div>
+
+<!-- COMPLETION -->
+<div class="completion" id="completion">
+  <h3>🎉 説明パート完了！</h3>
+  <p>現在・過去・未来の基本をおさえました。次はクイズで定着させましょう。</p>
+  <div class="completion-btns">
+    <a class="btn-primary" href="07_present_future.html">② クイズへ進む →</a>
+    <a class="btn-ghost" href="../index.html">← トップへ</a>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── Section navigation ──
+const sections = ['sec1','sec2','sec3','sec4','sec5'];
+const lpSteps  = ['lp1','lp2','lp3','lp4','lp5'];
+
+function goSection(n) {
+  // mark prev as done
+  const prev = document.getElementById(lpSteps[n-2]);
+  if(prev){ prev.classList.remove('current'); prev.classList.add('done'); prev.querySelector('.lp-dot').textContent='✓'; }
+  // activate current
+  const cur = document.getElementById(lpSteps[n-1]);
+  if(cur){ cur.classList.add('current'); }
+  // lines
+  document.querySelectorAll('.lp-line').forEach((l,i)=>{ if(i<n-1) l.style.background='var(--green)'; });
+  // show section
+  const sec = document.getElementById('sec'+n);
+  if(sec){ sec.classList.add('visible'); sec.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+
+// ── Choice checks (sec2) ──
+let cq1done=false, cq2done=false;
+function checkChoice(qid, btn, correct) {
+  const wrap = document.getElementById(qid);
+  wrap.querySelectorAll('.choice-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct){
+    wrap.querySelectorAll('.choice-opt').forEach(b=>{ if(b.dataset.correct==='true') b.classList.add('correct'); });
+  }
+  if(qid==='cq1') cq1done=correct||true;
+  if(qid==='cq2'){ cq2done=correct||true; }
+  if(cq1done&&cq2done) document.getElementById('btn-sec3').disabled=false;
+}
+// mark correct answers for reveal
+document.querySelectorAll('#cq1 .choice-opt, #cq2 .choice-opt').forEach(b=>{
+  if(b.textContent.trim().startsWith('B')&&b.closest('#cq1')) b.dataset.correct='true';
+  if(b.textContent.trim().startsWith('A')&&b.closest('#cq2')) b.dataset.correct='true';
+});
+
+// ── Fill-in checks ──
+function checkFills(){
+  let allOk=true;
+  ['f1','f2','f3','f4'].forEach(id=>{
+    const inp=document.getElementById(id);
+    const val=inp.value.trim().toLowerCase();
+    const ans=inp.dataset.ans.toLowerCase();
+    inp.classList.remove('correct','wrong');
+    if(val===ans){ inp.classList.add('correct'); }
+    else{ inp.classList.add('wrong'); allOk=false; }
+  });
+  document.getElementById('btn-sec4').disabled=false; // allow proceed regardless
+}
+
+// ── Sequential choice (sec4) ──
+let sq1done=false,sq2done=false,sq3done=false;
+function checkSQ(qid, nextId, btn, correct){
+  const wrap=document.getElementById(qid);
+  wrap.querySelectorAll('.choice-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(qid==='sq1') sq1done=true;
+  if(qid==='sq2') sq2done=true;
+  if(qid==='sq3'){ sq3done=true; document.getElementById('btn-sec5').disabled=false; }
+  if(nextId && correct){
+    setTimeout(()=>{
+      const next=document.getElementById(nextId);
+      next.style.display='block';
+      next.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 600);
+  } else if(nextId && !correct){
+    setTimeout(()=>{
+      wrap.querySelectorAll('.choice-opt').forEach(b=>{ b.disabled=false; b.classList.remove('correct','wrong'); });
+    }, 1000);
+  }
+}
+
+// ── Sort / word order ──
+const sortData = {
+  sort1: ['He','moved','to','Tokyo','two','years','ago','.'],
+  sort2: ['My','sister','is','going','to','go','to','Canada','next','year','.'],
+};
+
+function initSort(id){
+  const words=[...sortData[id]].sort(()=>Math.random()-.5);
+  const bank=document.getElementById(id+'-bank');
+  bank.innerHTML='';
+  document.getElementById(id+'-answer').innerHTML='';
+  document.getElementById(id+'-result').className='sort-result';
+  words.forEach(w=>{
+    const t=document.createElement('span');
+    t.className='tile'; t.textContent=w;
+    t.onclick=()=>moveTile(t,id,'bank','answer');
+    bank.appendChild(t);
+  });
+}
+function moveTile(tile, id, from, to){
+  tile.classList.toggle('placed', from==='bank');
+  document.getElementById(id+'-'+to).appendChild(tile);
+  tile.onclick=()=>moveTile(tile,id,to,from);
+}
+function checkSort(id, correct){
+  const tiles=[...document.getElementById(id+'-answer').querySelectorAll('.tile')];
+  const ans=tiles.map(t=>t.textContent).join(' ');
+  const corr=correct.join(' ');
+  const res=document.getElementById(id+'-result');
+  if(ans===corr){ res.className='sort-result ok'; res.textContent='✅ 正解！ '+corr; }
+  else{ res.className='sort-result ng'; res.textContent='❌ 正解: '+corr; }
+}
+function resetSort(id){ initSort(id); }
+
+// ── Complete ──
+function complete(){
+  try{ localStorage.setItem('unit_7_explain','1'); }catch(e){}
+  sendProgress({ unit:7, step:1, stepName:'説明', elapsed:getElapsed() });
+  document.getElementById('completion').classList.add('show');
+  document.getElementById('completion').scrollIntoView({behavior:'smooth'});
+  // mark final lp step
+  const lp=document.getElementById('lp5');
+  lp.classList.remove('current'); lp.classList.add('done'); lp.querySelector('.lp-dot').textContent='✓';
+}
+
+// ── Intersection observer for section reveals ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+document.querySelectorAll('.section').forEach(s=>observer.observe(s));
+
+// ── Init sorts ──
+initSort('sort1');
+initSort('sort2');
+</script>
+<script src="../progress.js"></script>
+</body>
+</html>
