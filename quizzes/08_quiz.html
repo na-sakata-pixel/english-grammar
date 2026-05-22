@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 クイズ — 単純・進行・完了 | English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:       #0e0f13;
+    --surface:  #16181f;
+    --surface2: #1c1f29;
+    --border:   #2a2d38;
+    --accent:   #c8a96e;
+    --accent2:  #7eb8c9;
+    --text:     #e8e6e0;
+    --muted:    #6b6f7e;
+    --correct:  #7ec9a0;
+    --wrong:    #c97e7e;
+    --cat:      #a87ec9;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  nav {
+    position: relative; z-index: 1;
+    padding: 20px 40px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .nav-links { display: flex; align-items: center; gap: 12px; }
+  nav a { font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--muted); text-decoration: none; letter-spacing: 0.05em; transition: color 0.2s; }
+  nav a:hover { color: var(--accent); }
+  .nav-sep { color: var(--border); }
+  .nav-steps { display: flex; gap: 6px; }
+  .step-dot { font-family: 'JetBrains Mono', monospace; font-size: .65rem; padding: 4px 10px; border-radius: 20px; border: 1px solid var(--border); color: var(--muted); text-decoration: none; transition: all .2s; }
+  .step-dot.active { background: var(--cat); color: #0e0f13; border-color: var(--cat); font-weight: 600; }
+  .step-dot:hover:not(.active) { border-color: var(--cat); color: var(--cat); }
+
+  .quiz-header {
+    position: relative; z-index: 1;
+    padding: 40px 40px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .unit-badge { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--cat); letter-spacing: 0.2em; margin-bottom: 8px; }
+  .quiz-title { font-family: 'Playfair Display', serif; font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 700; }
+  .quiz-title-en { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--muted); margin-top: 4px; }
+  .mode-toggle { display: flex; background: var(--surface); border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+  .mode-btn { padding: 8px 18px; font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.08em; cursor: pointer; border: none; background: transparent; color: var(--muted); transition: all 0.2s; }
+  .mode-btn.active { background: var(--cat); color: #0e0f13; font-weight: 600; }
+
+  .quiz-progress { position: relative; z-index: 1; padding: 20px 40px; display: flex; align-items: center; gap: 16px; }
+  .q-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+  .q-track { flex: 1; height: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .q-fill { height: 100%; width: 0%; background: var(--cat); border-radius: 2px; transition: width 0.4s ease; }
+  .q-count { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--cat); }
+
+  .quiz-area { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 32px 40px 64px; }
+  .question-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--cat); border-radius: 8px; padding: 28px 28px 24px; margin-bottom: 24px; }
+  .q-jp { font-size: 1.25rem; font-weight: 500; line-height: 1.6; margin-bottom: 8px; }
+  .q-note { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+
+  .input-mode { display: block; }
+  .choice-mode { display: none; }
+  .input-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  input[type="text"] { flex: 1; padding: 12px 16px; background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; color: var(--text); font-size: 0.95rem; font-family: 'Noto Sans JP', sans-serif; outline: none; transition: border-color 0.2s; }
+  input[type="text"]:focus { border-color: var(--cat); }
+  input[type="text"]::placeholder { color: var(--muted); }
+  input[type="text"]:disabled { opacity: 0.6; }
+
+  .choices { display: grid; gap: 10px; }
+  .choice-btn { background: var(--surface2); border: 1.5px solid var(--border); border-radius: 6px; padding: 13px 18px; color: var(--text); font-size: 0.88rem; font-family: 'Noto Sans JP', sans-serif; text-align: left; cursor: pointer; transition: border-color 0.2s, background 0.2s; display: flex; align-items: center; gap: 10px; }
+  .choice-btn:hover:not(:disabled) { border-color: var(--cat); background: #1c1f29; }
+  .choice-btn .choice-key { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; color: var(--muted); min-width: 16px; }
+  .choice-btn.correct { border-color: var(--correct); background: rgba(126,201,160,0.08); color: var(--correct); }
+  .choice-btn.wrong   { border-color: var(--wrong);   background: rgba(201,126,126,0.08);  color: var(--wrong); }
+
+  .btn { padding: 11px 24px; border-radius: 6px; border: none; font-size: 0.85rem; font-family: 'Noto Sans JP', sans-serif; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .btn-primary { background: var(--cat); color: #0e0f13; }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+  .btn-ghost:hover { color: var(--text); border-color: var(--text); }
+
+  .feedback { border-radius: 6px; padding: 12px 16px; margin-bottom: 16px; font-size: 0.88rem; display: none; align-items: flex-start; gap: 8px; line-height: 1.6; }
+  .feedback.show { display: flex; }
+  .feedback.correct-fb { background: rgba(126,201,160,0.1); border: 1px solid rgba(126,201,160,0.3); color: var(--correct); }
+  .feedback.wrong-fb   { background: rgba(201,126,126,0.1); border: 1px solid rgba(201,126,126,0.3); color: var(--wrong); }
+  .fb-icon { font-size: 1rem; }
+  .fb-answer { font-weight: 500; color: var(--text); }
+  .action-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+
+  .score-screen { position: relative; z-index: 1; max-width: 700px; margin: 0 auto; padding: 48px 40px; display: none; text-align: center; }
+  .score-screen.show { display: block; }
+  .score-circle { width: 120px; height: 120px; border-radius: 50%; border: 2px solid var(--cat); display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 24px; }
+  .score-num { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700; color: var(--cat); line-height: 1; }
+  .score-denom { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--muted); }
+  .score-msg { font-size: 1rem; color: var(--text); margin-bottom: 32px; }
+  .review { text-align: left; margin-bottom: 32px; }
+  .review-item { padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 12px; font-size: 0.85rem; }
+  .review-icon { font-size: 0.9rem; min-width: 20px; }
+  .review-body { flex: 1; }
+  .review-jp { color: var(--muted); font-size: 0.78rem; margin-bottom: 2px; }
+  .review-ans { font-weight: 500; }
+  .review-yours { font-size: 0.75rem; color: var(--wrong); }
+  .btn-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  @media (max-width: 600px) {
+    nav, .quiz-header, .quiz-area, .quiz-progress, .score-screen { padding-left: 20px; padding-right: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-links">
+    <a href="../index.html">English Grammar</a>
+    <span class="nav-sep">/</span>
+    <a href="08_explain.html">Unit 08</a>
+    <span class="nav-sep">/</span>
+    <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.7rem">クイズ</span>
+  </div>
+  <div class="nav-steps">
+    <a class="step-dot" href="08_explain.html">① 説明</a>
+    <a class="step-dot active" href="08_quiz.html">② クイズ</a>
+    <a class="step-dot" href="08_speaking.html">③ 発話</a>
+    <a class="step-dot" href="08_pair.html">④ ペア</a>
+  </div>
+</nav>
+
+<div class="quiz-header">
+  <div>
+    <div class="unit-badge">UNIT 08 — VERBS</div>
+    <div class="quiz-title">単純・進行・完了</div>
+    <div class="quiz-title-en">Simple / Progressive / Perfect Aspect</div>
+  </div>
+  <div class="mode-toggle">
+    <button class="mode-btn active" id="btn-input" onclick="setMode('input')">入力式</button>
+    <button class="mode-btn" id="btn-choice" onclick="setMode('choice')">選択式</button>
+  </div>
+</div>
+
+<div class="quiz-progress">
+  <div class="q-label">PROGRESS</div>
+  <div class="q-track"><div class="q-fill" id="q-fill"></div></div>
+  <div class="q-count" id="q-count">1 / 10</div>
+</div>
+
+<div class="quiz-area" id="quiz-area">
+  <div class="question-card">
+    <div class="q-jp" id="q-jp"></div>
+    <div class="q-note" id="q-note"></div>
+  </div>
+
+  <div class="input-mode" id="input-mode">
+    <div class="input-row">
+      <input type="text" id="text-input" placeholder="英語で入力..." autocomplete="off" />
+      <button class="btn btn-primary" id="submit-btn">確認</button>
+    </div>
+  </div>
+
+  <div class="choice-mode" id="choice-mode">
+    <div class="choices" id="choices"></div>
+  </div>
+
+  <div class="feedback" id="feedback">
+    <span class="fb-icon"></span>
+    <div><div class="fb-answer" id="fb-answer"></div><div id="fb-note"></div></div>
+  </div>
+
+  <div class="action-row">
+    <div></div>
+    <button class="btn btn-ghost" id="next-btn" style="display:none" onclick="nextQ()">次へ →</button>
+  </div>
+</div>
+
+<div class="score-screen" id="score-screen">
+  <div class="score-circle">
+    <div class="score-num" id="s-num"></div>
+    <div class="score-denom" id="s-denom"></div>
+  </div>
+  <div class="score-msg" id="s-msg"></div>
+  <div class="review" id="review"></div>
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="restart()">もう一度</button>
+    <button class="btn btn-ghost" onclick="location.href='08_speaking.html'">③ 発話へ →</button>
+    <button class="btn btn-ghost" onclick="location.href='../index.html'">← トップへ</button>
+  </div>
+</div>
+
+<script>
+const UNIT_ID = 8;
+const questions = [
+  {
+    jp: "彼女は今レポートを書いています。",
+    answers: ["she is writing a report", "she's writing a report"],
+    choices: ["She writes a report.", "She is writing a report.", "She has written a report.", "She wrote a report."],
+    correct_choice: 1,
+    note: "今まさに進行中 → 現在進行形"
+  },
+  {
+    jp: "私はすでに夕食を食べました。",
+    answers: ["i have already eaten dinner", "i've already eaten dinner"],
+    choices: ["I already eat dinner.", "I was eating dinner.", "I have already eaten dinner.", "I ate dinner already."],
+    correct_choice: 2,
+    note: "完了（already）→ 現在完了形"
+  },
+  {
+    jp: "彼は毎朝ジョギングをします。",
+    answers: ["he jogs every morning", "he goes jogging every morning"],
+    choices: ["He is jogging every morning.", "He has jogged every morning.", "He jogs every morning.", "He jogged every morning."],
+    correct_choice: 2,
+    note: "習慣・繰り返し → 現在単純形"
+  },
+  {
+    jp: "私たちは3年間この町に住んでいます。",
+    answers: ["we have lived in this town for three years", "we've lived in this town for three years", "we have been living in this town for three years"],
+    choices: ["We live in this town for three years.", "We lived in this town for three years.", "We are living in this town for three years.", "We have lived in this town for three years."],
+    correct_choice: 3,
+    note: "継続（for + 期間）→ 現在完了形"
+  },
+  {
+    jp: "彼らは今サッカーをしているところです。",
+    answers: ["they are playing soccer", "they're playing soccer"],
+    choices: ["They play soccer.", "They have played soccer.", "They are playing soccer.", "They played soccer."],
+    correct_choice: 2,
+    note: "今まさに進行中 → 現在進行形"
+  },
+  {
+    jp: "私は一度もスカイダイビングをしたことがありません。",
+    answers: ["i have never gone skydiving", "i've never gone skydiving", "i have never done skydiving", "i've never done skydiving"],
+    choices: ["I never go skydiving.", "I never went skydiving.", "I have never gone skydiving.", "I am never going skydiving."],
+    correct_choice: 2,
+    note: "経験（never）→ 現在完了形"
+  },
+  {
+    jp: "電話が鳴っています。出てもらえますか？",
+    answers: ["the phone is ringing", "the phone's ringing"],
+    choices: ["The phone rings.", "The phone has rung.", "The phone rang.", "The phone is ringing."],
+    correct_choice: 3,
+    note: "今この瞬間 → 現在進行形"
+  },
+  {
+    jp: "彼女はすでにそのメールを送りました。",
+    answers: ["she has already sent the email", "she's already sent the email"],
+    choices: ["She already sends the email.", "She has already sent the email.", "She is already sending the email.", "She already sent the email."],
+    correct_choice: 1,
+    note: "完了（already）→ 現在完了形"
+  },
+  {
+    jp: "私の弟は医者になりたがっています。",
+    answers: ["my brother wants to be a doctor", "my younger brother wants to be a doctor"],
+    choices: ["My brother is wanting to be a doctor.", "My brother has wanted to be a doctor.", "My brother wants to be a doctor.", "My brother wanted to be a doctor."],
+    correct_choice: 2,
+    note: "状態動詞（want）は進行形不可 → 現在単純形"
+  },
+  {
+    jp: "彼は1時間ずっと走っています。",
+    answers: ["he has been running for an hour", "he has been running for one hour"],
+    choices: ["He runs for an hour.", "He is running for an hour.", "He ran for an hour.", "He has been running for an hour."],
+    correct_choice: 3,
+    note: "動作の継続（完了進行形）→ have been + -ing"
+  },
+];
+
+let mode = 'input';
+let current = 0, score = 0, results = [];
+
+function normalize(s) {
+  return s.trim().toLowerCase().replace(/[.,!?]$/g, '').replace(/\s+/g, ' ');
+}
+
+function setMode(m) {
+  mode = m;
+  document.getElementById('btn-input').classList.toggle('active', m === 'input');
+  document.getElementById('btn-choice').classList.toggle('active', m === 'choice');
+  document.getElementById('input-mode').style.display = m === 'input' ? 'block' : 'none';
+  document.getElementById('choice-mode').style.display = m === 'choice' ? 'block' : 'none';
+  restart();
+}
+
+function loadQ() {
+  const q = questions[current];
+  document.getElementById('q-jp').textContent = q.jp;
+  document.getElementById('q-note').textContent = '';
+  document.getElementById('q-fill').style.width = `${(current / questions.length) * 100}%`;
+  document.getElementById('q-count').textContent = `${current + 1} / ${questions.length}`;
+  document.getElementById('feedback').className = 'feedback';
+  document.getElementById('next-btn').style.display = 'none';
+
+  if (mode === 'input') {
+    const inp = document.getElementById('text-input');
+    inp.value = ''; inp.disabled = false; inp.focus();
+    document.getElementById('submit-btn').style.display = '';
+  } else {
+    buildChoices(q);
+  }
+}
+
+function buildChoices(q) {
+  const wrap = document.getElementById('choices');
+  wrap.innerHTML = '';
+  const keys = ['A','B','C','D'];
+  q.choices.forEach((c, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="choice-key">${keys[i]}</span>${c}`;
+    btn.onclick = () => checkChoice(i, q);
+    wrap.appendChild(btn);
+  });
+}
+
+function checkInput() {
+  const val = document.getElementById('text-input').value;
+  const q = questions[current];
+  const ok = q.answers.some(a => normalize(a) === normalize(val));
+  document.getElementById('text-input').disabled = true;
+  document.getElementById('submit-btn').style.display = 'none';
+  showFeedback(ok, q, val);
+  results.push({ q, userAns: val, correct: ok });
+  if (ok) score++;
+}
+
+function checkChoice(idx, q) {
+  const btns = document.querySelectorAll('.choice-btn');
+  btns.forEach(b => b.disabled = true);
+  const ok = idx === q.correct_choice;
+  btns[q.correct_choice].classList.add('correct');
+  if (!ok) btns[idx].classList.add('wrong');
+  showFeedback(ok, q, q.choices[idx]);
+  results.push({ q, userAns: q.choices[idx], correct: ok });
+  if (ok) score++;
+}
+
+function showFeedback(ok, q, userAns) {
+  const fb = document.getElementById('feedback');
+  fb.className = 'feedback show ' + (ok ? 'correct-fb' : 'wrong-fb');
+  fb.querySelector('.fb-icon').textContent = ok ? '✅' : '❌';
+  const dispAns = (q.answers ? q.answers[0] : q.choices[q.correct_choice]);
+  const cap = dispAns.charAt(0).toUpperCase() + dispAns.slice(1) + '.';
+  document.getElementById('fb-answer').textContent = ok ? cap : `正解: ${cap}`;
+  document.getElementById('fb-note').textContent = q.note || '';
+  document.getElementById('next-btn').style.display = '';
+}
+
+function nextQ() {
+  current++;
+  if (current >= questions.length) showScore();
+  else loadQ();
+}
+
+function showScore() {
+  document.getElementById('quiz-area').style.display = 'none';
+  const ss = document.getElementById('score-screen');
+  ss.classList.add('show');
+  document.getElementById('s-num').textContent = score;
+  document.getElementById('s-denom').textContent = `/ ${questions.length}`;
+  const pct = score / questions.length;
+  document.getElementById('s-msg').textContent =
+    pct === 1 ? '🏆 パーフェクト！' : pct >= 0.8 ? '🌟 とても良くできました！' : pct >= 0.6 ? '👍 もう少しで満点！' : '📚 もう一度チャレンジしてみましょう。';
+
+  const rev = document.getElementById('review');
+  rev.innerHTML = results.map((r, i) => {
+    const ans = r.q.answers ? r.q.answers[0] : r.q.choices[r.q.correct_choice];
+    const cap = ans.charAt(0).toUpperCase() + ans.slice(1) + '.';
+    return `<div class="review-item">
+      <span class="review-icon">${r.correct ? '✅' : '❌'}</span>
+      <div class="review-body">
+        <div class="review-jp">${i+1}. ${r.q.jp}</div>
+        <div class="review-ans">${cap}</div>
+        ${!r.correct ? `<div class="review-yours">あなたの答え: ${r.userAns}</div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  try { if (score >= questions.length * 0.6) localStorage.setItem(`unit_${UNIT_ID}_done`, '1'); } catch(e) {}
+  sendProgress({ unit:UNIT_ID, step:2, stepName:'クイズ', score:score, total:questions.length, elapsed:getElapsed() });
+  document.getElementById('q-fill').style.width = '100%';
+}
+
+function restart() {
+  current = 0; score = 0; results = [];
+  document.getElementById('quiz-area').style.display = 'block';
+  document.getElementById('score-screen').classList.remove('show');
+  loadQ();
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (mode === 'input' && document.getElementById('submit-btn').style.display !== 'none') checkInput();
+    else if (document.getElementById('next-btn').style.display !== 'none') nextQ();
+  }
+});
+document.getElementById('submit-btn').addEventListener('click', checkInput);
+
+loadQ();
+</script>
+<script src="../progress.js"></script>
+</body>
+</html>

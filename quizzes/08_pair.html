@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 ペアワーク — 単純・進行・完了 | English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0e0f13;
+  --surface: #16181f;
+  --sf2:     #1c1f29;
+  --border:  #2a2d38;
+  --accent:  #c8a96e;
+  --cat:     #a87ec9;
+  --text:    #e8e6e0;
+  --muted:   #6b6f7e;
+  --green:   #7ec9a0;
+  --red:     #c97e7e;
+  --role-color: #a87ec9;
+  --role-bg:    rgba(168,126,201,0.08);
+  --role-border: rgba(168,126,201,0.3);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{ background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh; }
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;z-index:0;
+}
+
+#role-select{
+  position:relative;z-index:1;min-height:100vh;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;padding:40px 20px;text-align:center;
+}
+#role-select h1{ font-family:'Playfair Display',serif;font-size:clamp(1.6rem,5vw,2.4rem);margin-bottom:8px; }
+#role-select .sub{ font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-bottom:48px;letter-spacing:.1em; }
+.role-cards{display:flex;gap:24px;flex-wrap:wrap;justify-content:center}
+.role-card{ background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:40px 48px;cursor:pointer;transition:all .25s;width:220px;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:12px; }
+.role-card:hover{transform:translateY(-4px)}
+.role-card.card-a:hover{border-color:#7eb8c9;background:rgba(126,184,201,.06)}
+.role-card.card-b:hover{border-color:#a87ec9;background:rgba(168,126,201,.06)}
+.role-letter{ font-family:'Playfair Display',serif;font-size:4rem;font-weight:700;line-height:1; }
+.card-a .role-letter{color:#7eb8c9} .card-b .role-letter{color:#a87ec9}
+.role-name{font-size:.9rem;color:var(--text)}
+.role-hint{font-size:.75rem;color:var(--muted);font-family:'JetBrains Mono',monospace}
+.share-hint{ margin-top:40px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 20px;max-width:480px;line-height:1.8; }
+.share-hint strong{color:var(--accent)}
+
+#activity{display:none;position:relative;z-index:1}
+
+nav{ padding:16px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; }
+.nav-left{display:flex;align-items:center;gap:12px}
+nav a{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);text-decoration:none;transition:color .2s}
+nav a:hover{color:var(--accent)}
+.nav-sep{color:var(--border)}
+.nav-steps{display:flex;gap:6px}
+.step-dot{ font-family:'JetBrains Mono',monospace;font-size:.65rem;padding:4px 10px;border-radius:20px;border:1px solid var(--border);color:var(--muted);text-decoration:none;transition:all .2s; }
+.step-dot.active{background:var(--cat);color:#0e0f13;border-color:var(--cat);font-weight:600}
+.step-dot:hover:not(.active){border-color:var(--cat);color:var(--cat)}
+.role-badge{ font-family:'JetBrains Mono',monospace;font-size:.7rem;font-weight:600;padding:5px 14px;border-radius:20px;letter-spacing:.08em; }
+
+.pw-header{ padding:36px 40px 28px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px; }
+.pw-title-block .badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.2em;margin-bottom:6px;color:var(--muted)}
+.pw-title{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700}
+.pw-sub{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted);margin-top:4px}
+.pw-instructions{ background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--role-color);border-radius:8px;padding:14px 18px;max-width:420px;font-size:.82rem;line-height:1.7;color:#c0bdb5; }
+.pw-instructions strong{color:var(--text);font-weight:500}
+
+.pw-progress{ padding:16px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px; }
+.p-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)}
+.p-track{flex:1;height:2px;background:var(--border);border-radius:2px;overflow:hidden}
+.p-fill{height:100%;width:0%;background:var(--role-color);border-radius:2px;transition:width .4s ease}
+.p-count{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--role-color)}
+
+main{max-width:800px;margin:0 auto;padding:40px 40px 80px}
+
+.round-card{ background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px; }
+.round-header{ padding:14px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between; }
+.round-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.1em}
+.round-title{font-size:.85rem;font-weight:500}
+
+.gap-table{width:100%;border-collapse:collapse}
+.gap-table th{ font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.08em;color:var(--muted);text-align:left;padding:10px 16px;border-bottom:1px solid var(--border);font-weight:400;background:rgba(255,255,255,.02); }
+.gap-table td{ padding:12px 16px;border-bottom:1px solid rgba(42,45,56,.6);font-size:.88rem;line-height:1.5;vertical-align:top; }
+.gap-table tr:last-child td{border-bottom:none}
+.gap-table .person{font-weight:500;color:var(--text)}
+
+.gap-hidden{ background:rgba(42,45,56,.5);border-radius:4px;color:transparent;user-select:none;padding:2px 8px;font-family:'JetBrains Mono',monospace;font-size:.72rem;border:1px dashed var(--border);position:relative;display:inline-block;min-width:100px; }
+.gap-hidden::after{ content:'パートナーに聞く';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:.58rem;color:var(--muted);letter-spacing:.05em; }
+.gap-shown{color:var(--role-color);font-weight:500}
+
+.answer-cell input{ background:var(--sf2);border:1.5px solid var(--border);border-radius:5px;padding:6px 10px;color:var(--text);font-size:.82rem;font-family:'Noto Sans JP',sans-serif;outline:none;width:100%;transition:border-color .2s; }
+.answer-cell input:focus{border-color:var(--role-color)}
+.answer-cell input.correct{border-color:var(--green);color:var(--green)}
+.answer-cell input.wrong{border-color:var(--red)}
+
+.task-box{ background:var(--sf2);border:1px solid var(--border);border-radius:8px;padding:18px 20px;margin:16px 0; }
+.task-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--role-color);letter-spacing:.15em;margin-bottom:8px}
+.task-text{font-size:.88rem;line-height:1.8;color:var(--text)}
+.task-en{ margin-top:8px;font-family:'JetBrains Mono',monospace;font-size:.8rem;color:var(--accent);background:rgba(200,169,110,.08);border-radius:4px;padding:6px 10px; }
+
+.speak-prompt{ background:var(--surface);border:1px solid var(--border);border-left:3px solid var(--role-color);border-radius:8px;padding:14px 20px;margin:12px 0;font-size:.9rem;line-height:1.8; }
+.speak-jp{color:var(--muted);font-size:.78rem;margin-bottom:4px}
+.speak-en{font-weight:500;color:var(--text)}
+
+.action-row{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-top:24px}
+.btn{padding:10px 24px;border-radius:6px;border:none;font-size:.85rem;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--role-color);color:#0e0f13}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+.btn-sm{padding:7px 16px;font-size:.78rem}
+
+.round-nav{display:flex;gap:8px;flex-wrap:wrap}
+.round-dot{ width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;background:transparent; }
+.round-dot:hover{border-color:var(--role-color);color:var(--role-color)}
+.round-dot.active{background:var(--role-color);border-color:var(--role-color);color:#0e0f13;font-weight:700}
+.round-dot.done{background:rgba(126,201,160,.15);border-color:var(--green);color:var(--green)}
+
+.completion{ background:linear-gradient(135deg,rgba(168,126,201,.12),rgba(126,201,160,.08));border:1px solid var(--role-color);border-radius:12px;padding:40px;text-align:center;display:none;margin-top:32px; }
+.completion.show{display:block}
+.completion h3{font-family:'Playfair Display',serif;font-size:1.6rem;margin-bottom:8px}
+.completion p{color:var(--muted);font-size:.88rem;margin-bottom:28px;line-height:1.8}
+.completion-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-a{padding:11px 28px;background:var(--role-color);color:#0e0f13;border:none;border-radius:6px;font-size:.88rem;font-weight:500;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-a:hover{opacity:.85}
+.btn-b{padding:11px 28px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:.88rem;cursor:pointer;text-decoration:none;display:inline-block}
+.btn-b:hover{color:var(--text);border-color:var(--text)}
+
+@media(max-width:600px){
+  nav,main,.pw-header,.pw-progress{padding-left:20px;padding-right:20px}
+  .gap-table{font-size:.8rem}
+  .role-cards{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<div id="role-select">
+  <h1>Unit 08 — ペアワーク</h1>
+  <p class="sub">INFORMATION GAP ACTIVITY</p>
+  <div class="role-cards">
+    <a class="role-card card-a" href="?role=A">
+      <div class="role-letter">A</div>
+      <div class="role-name">Student A</div>
+      <div class="role-hint">あなたはAです</div>
+    </a>
+    <a class="role-card card-b" href="?role=B">
+      <div class="role-letter">B</div>
+      <div class="role-name">Student B</div>
+      <div class="role-hint">あなたはBです</div>
+    </a>
+  </div>
+  <div class="share-hint">
+    💡 先生の使い方<br>
+    授業でこのページを開いて <strong>?role=A</strong> か <strong>?role=B</strong> のURLをそれぞれのペアに共有してください。<br>
+    AとBで見える情報が違います。画面を見せずに英語で会話して空欄を埋めましょう。
+  </div>
+</div>
+
+<div id="activity">
+
+<nav>
+  <div class="nav-left">
+    <a href="../index.html">English Grammar</a>
+    <span class="nav-sep">/</span>
+    <a href="08_explain.html">Unit 08</a>
+    <span class="nav-sep">/</span>
+    <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.7rem">ペアワーク</span>
+  </div>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <div class="nav-steps">
+      <a class="step-dot" href="08_explain.html">① 説明</a>
+      <a class="step-dot" href="08_quiz.html">② クイズ</a>
+      <a class="step-dot" href="08_speaking.html">③ 発話</a>
+      <a class="step-dot active" href="08_pair.html">④ ペア</a>
+    </div>
+    <div class="role-badge" id="role-badge">Student A</div>
+  </div>
+</nav>
+
+<div class="pw-header">
+  <div class="pw-title-block">
+    <div class="badge">UNIT 08 — PAIR WORK</div>
+    <div class="pw-title">インフォメーションギャップ</div>
+    <div class="pw-sub">単純・進行・完了 / Information Gap Activity</div>
+  </div>
+  <div class="pw-instructions" id="pw-instructions">
+    <strong>あなたの役割：Student A</strong><br>
+    グレーの欄はパートナーだけが持っている情報です。<strong>画面を見せずに</strong>英語で質問して空欄を埋めましょう。
+  </div>
+</div>
+
+<div class="pw-progress">
+  <div class="p-label">PROGRESS</div>
+  <div class="p-track"><div class="p-fill" id="p-fill"></div></div>
+  <div class="p-count" id="p-count">Round 1 / 3</div>
+</div>
+
+<main>
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:28px;flex-wrap:wrap">
+    <span style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted)">ROUND</span>
+    <div class="round-nav">
+      <button class="round-dot active" onclick="goRound(1)" id="rd1">1</button>
+      <button class="round-dot" onclick="goRound(2)" id="rd2">2</button>
+      <button class="round-dot" onclick="goRound(3)" id="rd3">3</button>
+    </div>
+  </div>
+
+  <!-- ══ ROUND 1：日課・習慣（単純形） ══ -->
+  <div id="round1">
+    <div class="round-card">
+      <div class="round-header">
+        <span class="round-num">ROUND 1 / 3</span>
+        <span class="round-title">日課と習慣 — 現在単純形</span>
+      </div>
+      <div class="task-box">
+        <div class="task-label">TASK</div>
+        <div class="task-text">
+          4人の人物の日課についての表です。
+          パートナーだけが知っている情報（<span style="color:var(--muted)">グレー枠</span>）を英語で質問して空欄を埋めましょう。<br>
+          <span style="font-size:.78rem;color:var(--muted)">※画面を見せてはいけません。</span>
+        </div>
+        <div class="task-en" id="r1-question-hint"></div>
+      </div>
+      <table class="gap-table">
+        <thead><tr><th>名前</th><th>起きる時間</th><th>朝食</th><th>仕事・学校</th></tr></thead>
+        <tbody id="r1-body"></tbody>
+      </table>
+    </div>
+    <div class="task-box">
+      <div class="task-label">USEFUL QUESTIONS</div>
+      <div class="task-text" style="display:flex;flex-direction:column;gap:6px">
+        <div class="speak-prompt"><span class="speak-jp">〜は何時に起きますか？</span><div class="speak-en">What time does ___ wake up?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜は朝食に何を食べますか？</span><div class="speak-en">What does ___ eat for breakfast?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜はどこで働いていますか／勉強していますか？</span><div class="speak-en">Where does ___ work / study?</div></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-ghost btn-sm" onclick="showAnswers(1)">答え合わせ</button>
+      <button class="btn btn-primary" onclick="goRound(2)">Round 2 へ →</button>
+    </div>
+  </div>
+
+  <!-- ══ ROUND 2：今していること（進行形） ══ -->
+  <div id="round2" style="display:none">
+    <div class="round-card">
+      <div class="round-header">
+        <span class="round-num">ROUND 2 / 3</span>
+        <span class="round-title">今していること — 現在進行形</span>
+      </div>
+      <div class="task-box">
+        <div class="task-label">TASK</div>
+        <div class="task-text">今この瞬間の様子についての表です。パートナーに質問して空欄を埋めましょう。</div>
+        <div class="task-en" id="r2-question-hint"></div>
+      </div>
+      <table class="gap-table">
+        <thead><tr><th>人物</th><th>していること</th><th>場所</th><th>一緒にいる人</th></tr></thead>
+        <tbody id="r2-body"></tbody>
+      </table>
+    </div>
+    <div class="task-box">
+      <div class="task-label">USEFUL QUESTIONS</div>
+      <div class="task-text" style="display:flex;flex-direction:column;gap:6px">
+        <div class="speak-prompt"><span class="speak-jp">〜は今何をしていますか？</span><div class="speak-en">What is ___ doing right now?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜は今どこにいますか？</span><div class="speak-en">Where is ___ right now?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜は今誰と一緒にいますか？</span><div class="speak-en">Who is ___ with right now?</div></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-ghost btn-sm" onclick="showAnswers(2)">答え合わせ</button>
+      <button class="btn btn-primary" onclick="goRound(3)">Round 3 へ →</button>
+    </div>
+  </div>
+
+  <!-- ══ ROUND 3：経験・完了（完了形） ══ -->
+  <div id="round3" style="display:none">
+    <div class="round-card">
+      <div class="round-header">
+        <span class="round-num">ROUND 3 / 3</span>
+        <span class="round-title">経験と完了 — 現在完了形</span>
+      </div>
+      <div class="task-box">
+        <div class="task-label">TASK</div>
+        <div class="task-text">4人の経験・完了した出来事についての表です。パートナーに質問して空欄を埋めましょう。</div>
+        <div class="task-en" id="r3-question-hint"></div>
+      </div>
+      <table class="gap-table">
+        <thead><tr><th>人物</th><th>行ったことがある国</th><th>やったことがある趣味</th><th>最近完了したこと</th></tr></thead>
+        <tbody id="r3-body"></tbody>
+      </table>
+    </div>
+    <div class="task-box">
+      <div class="task-label">USEFUL QUESTIONS</div>
+      <div class="task-text" style="display:flex;flex-direction:column;gap:6px">
+        <div class="speak-prompt"><span class="speak-jp">〜はどの国に行ったことがありますか？</span><div class="speak-en">Which countries has ___ been to?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜は〜をやったことがありますか？</span><div class="speak-en">Has ___ ever tried ___?</div></div>
+        <div class="speak-prompt"><span class="speak-jp">〜は最近何を終わらせましたか？</span><div class="speak-en">What has ___ recently finished / completed?</div></div>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="btn btn-ghost btn-sm" onclick="showAnswers(3)">答え合わせ</button>
+      <button class="btn btn-primary" onclick="complete()">完了 ✓</button>
+    </div>
+  </div>
+
+  <div class="completion" id="completion">
+    <h3>🎉 ペアワーク完了！</h3>
+    <p>
+      3つのラウンドで単純・進行・完了形を使って会話しました。<br>
+      パートナーと答えを確認して、間違えたところは復習しましょう。
+    </p>
+    <div class="completion-btns">
+      <a class="btn-a" href="../index.html">← ユニット一覧へ</a>
+      <a class="btn-b" href="08_quiz.html">② クイズを復習</a>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<script>
+const data = {
+  r1: {
+    cols: ['起きる時間','朝食','仕事・学校'],
+    rows: [
+      { name:'Kenji',  A:['6:00 AM','rice and miso soup','hidden'],       B:['hidden','hidden','an IT company'] },
+      { name:'Maria',  A:['hidden','hidden','a language school'],          B:['7:30 AM','toast and coffee','hidden'] },
+      { name:'Tom',    A:['5:30 AM','hidden','a bakery'],                  B:['hidden','cereal and milk','hidden'] },
+      { name:'Yuki',   A:['hidden','yogurt and fruit','hidden'],           B:['8:00 AM','hidden','Osaka University'] },
+    ],
+    qhint: {
+      A:'Try: "What time does Maria wake up?" / "What does Tom eat for breakfast?" / "Where does Yuki study?"',
+      B:'Try: "Where does Kenji work?" / "What does Maria eat for breakfast?" / "What time does Yuki wake up?"',
+    }
+  },
+  r2: {
+    cols: ['していること','場所','一緒にいる人'],
+    rows: [
+      { name:'Kenji',  A:['coding',   'his home office','hidden'],           B:['hidden','hidden','alone'] },
+      { name:'Maria',  A:['hidden','hidden','her students'],                  B:['teaching English','a classroom','hidden'] },
+      { name:'Tom',    A:['baking bread','hidden','his colleague'],           B:['hidden','the bakery kitchen','hidden'] },
+      { name:'Yuki',   A:['hidden','the library','hidden'],                   B:['studying for exams','hidden','a friend'] },
+    ],
+    qhint: {
+      A:'Try: "What is Maria doing right now?" / "Where is Tom right now?" / "Who is Yuki with right now?"',
+      B:'Try: "Who is Kenji with right now?" / "Where is Maria right now?" / "What is Yuki doing?"',
+    }
+  },
+  r3: {
+    cols: ['行ったことがある国','やったことがある趣味','最近完了したこと'],
+    rows: [
+      { name:'Kenji',  A:['France, Australia','hidden','finished a marathon'],    B:['hidden','rock climbing','hidden'] },
+      { name:'Maria',  A:['hidden','hidden','moved to a new apartment'],          B:['Brazil, Canada','cooking classes','hidden'] },
+      { name:'Tom',    A:['Italy, Spain','hidden','opened his own bakery'],       B:['hidden','pottery','hidden'] },
+      { name:'Yuki',   A:['hidden','swimming, tennis','hidden'],                  B:['the UK, Singapore','hidden','passed N2 Japanese'] },
+    ],
+    qhint: {
+      A:'Try: "What hobby has Maria tried?" / "Which countries has Yuki been to?" / "What has Maria recently finished?"',
+      B:'Try: "What hobby has Kenji tried?" / "Which countries has Maria been to?" / "What has Yuki recently completed?"',
+    }
+  },
+};
+
+const params = new URLSearchParams(location.search);
+const role = (params.get('role') || '').toUpperCase();
+
+if (role === 'A' || role === 'B') {
+  document.getElementById('role-select').style.display = 'none';
+  document.getElementById('activity').style.display = 'block';
+  applyRole();
+  buildRound(1); buildRound(2); buildRound(3);
+}
+
+function applyRole() {
+  const isA = role === 'A';
+  const color = isA ? '#7eb8c9' : '#a87ec9';
+  const bg    = isA ? 'rgba(126,184,201,0.08)' : 'rgba(168,126,201,0.08)';
+  const bdr   = isA ? 'rgba(126,184,201,0.3)' : 'rgba(168,126,201,0.3)';
+  document.documentElement.style.setProperty('--role-color', color);
+  document.documentElement.style.setProperty('--role-bg', bg);
+  document.documentElement.style.setProperty('--role-border', bdr);
+
+  const badge = document.getElementById('role-badge');
+  badge.textContent = `Student ${role}`;
+  badge.style.background = bg;
+  badge.style.color = color;
+  badge.style.border = `1px solid ${bdr}`;
+  badge.style.borderRadius = '20px';
+  badge.style.padding = '4px 12px';
+
+  document.getElementById('pw-instructions').innerHTML =
+    `<strong>あなたの役割：Student ${role}</strong><br>
+     グレーの欄はパートナーだけが持っている情報です。<strong>画面を見せずに</strong>英語で質問して空欄を埋めましょう。`;
+}
+
+function buildRound(n) {
+  const key = `r${n}`;
+  const d = data[key];
+  const tbody = document.getElementById(`r${n}-body`);
+  const hint  = document.getElementById(`r${n}-question-hint`);
+  hint.textContent = d.qhint[role] || d.qhint['A'];
+  tbody.innerHTML = '';
+
+  d.rows.forEach(row => {
+    const cells = role === 'A' ? row.A : row.B;
+    const other = role === 'A' ? row.B : row.A;
+    const tr = document.createElement('tr');
+
+    const tdName = document.createElement('td');
+    tdName.className = 'person';
+    tdName.textContent = row.name;
+    tr.appendChild(tdName);
+
+    cells.forEach((cell, ci) => {
+      const td = document.createElement('td');
+      if (cell === 'hidden') {
+        td.className = 'answer-cell';
+        const inp = document.createElement('input');
+        inp.type = 'text';
+        inp.placeholder = '?';
+        inp.dataset.answer = other[ci];
+        td.appendChild(inp);
+      } else {
+        td.innerHTML = `<span class="gap-shown">${cell}</span>`;
+      }
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+let currentRound = 1;
+function goRound(n) {
+  [1,2,3].forEach(i => {
+    document.getElementById(`round${i}`).style.display = i === n ? 'block' : 'none';
+    const dot = document.getElementById(`rd${i}`);
+    dot.className = 'round-dot' + (i === n ? ' active' : (i < n ? ' done' : ''));
+  });
+  currentRound = n;
+  document.getElementById('p-fill').style.width = `${((n-1)/3)*100}%`;
+  document.getElementById('p-count').textContent = `Round ${n} / 3`;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showAnswers(n) {
+  document.getElementById(`r${n}-body`).querySelectorAll('.answer-cell input').forEach(inp => {
+    inp.value = inp.dataset.answer;
+    inp.classList.add('correct');
+    inp.disabled = true;
+  });
+}
+
+function complete() {
+  try { localStorage.setItem('unit_8_pair','1'); } catch(e) {}
+  sendProgress({ unit:8, step:4, stepName:'ペアワーク', elapsed:getElapsed() });
+  document.getElementById('p-fill').style.width = '100%';
+  document.getElementById('p-count').textContent = 'Complete!';
+  document.getElementById('rd3').className = 'round-dot done';
+  document.getElementById('completion').classList.add('show');
+  document.getElementById('completion').scrollIntoView({behavior:'smooth'});
+}
+</script>
+<script src="../progress.js"></script>
+</body>
+</html>

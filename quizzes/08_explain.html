@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>08 説明 — 単純・進行・完了 | English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0e0f13;
+  --surface: #16181f;
+  --sf2:     #1c1f29;
+  --border:  #2a2d38;
+  --accent:  #c8a96e;
+  --cat:     #a87ec9;
+  --cat2:    #7eb8c9;
+  --green:   #7ec9a0;
+  --red:     #c97e7e;
+  --text:    #e8e6e0;
+  --muted:   #6b6f7e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans JP',sans-serif;font-weight:300;
+  min-height:100vh;
+}
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;z-index:0;
+}
+
+/* NAV */
+nav{position:relative;z-index:10;padding:18px 40px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px}
+.nav-links{display:flex;align-items:center;gap:12px}
+nav a{font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--muted);text-decoration:none;letter-spacing:.05em;transition:color .2s}
+nav a:hover{color:var(--accent)}
+.nav-sep{color:var(--border)}
+.nav-steps{display:flex;gap:6px}
+.step-dot{
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  padding:4px 10px;border-radius:20px;border:1px solid var(--border);
+  color:var(--muted);text-decoration:none;transition:all .2s;
+}
+.step-dot.active{background:var(--cat);color:#0e0f13;border-color:var(--cat);font-weight:600}
+.step-dot:hover:not(.active){border-color:var(--cat);color:var(--cat)}
+
+/* HEADER */
+.unit-header{
+  position:relative;z-index:1;
+  padding:40px 40px 32px;border-bottom:1px solid var(--border);
+}
+.unit-badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--cat);letter-spacing:.2em;margin-bottom:8px}
+.unit-title{font-family:'Playfair Display',serif;font-size:clamp(1.6rem,4vw,2.4rem);font-weight:700;line-height:1.1;margin-bottom:4px}
+.unit-sub{font-family:'JetBrains Mono',monospace;font-size:.78rem;color:var(--muted);margin-bottom:16px}
+.unit-desc{font-size:.9rem;color:#c0bdb5;max-width:640px;line-height:1.8}
+
+/* PROGRESS STEPS */
+.lesson-progress{
+  position:relative;z-index:1;
+  padding:20px 40px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:0;overflow-x:auto;
+}
+.lp-step{
+  display:flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:.65rem;
+  color:var(--muted);white-space:nowrap;padding:0 12px;
+}
+.lp-step:first-child{padding-left:0}
+.lp-dot{
+  width:24px;height:24px;border-radius:50%;
+  border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.6rem;transition:all .3s;
+}
+.lp-step.done .lp-dot{background:var(--green);border-color:var(--green);color:#0e0f13}
+.lp-step.current .lp-dot{background:var(--cat);border-color:var(--cat);color:#0e0f13;font-weight:700}
+.lp-line{flex:1;height:1px;background:var(--border);min-width:20px}
+.lp-step.done + .lp-line{background:var(--green)}
+
+/* MAIN */
+main{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:48px 40px 80px}
+
+/* SECTION BLOCKS */
+.section{margin-bottom:56px;opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.section.visible{opacity:1;transform:translateY(0)}
+.section-num{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);letter-spacing:.15em;margin-bottom:6px}
+.section-title{font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;color:var(--cat);margin-bottom:16px;padding-bottom:10px;border-bottom:1px solid var(--border)}
+.prose{font-size:.92rem;line-height:2;color:#c8c5bc;margin-bottom:16px}
+.prose strong{color:var(--text);font-weight:500}
+.prose em{color:var(--accent);font-style:normal;font-weight:500}
+
+/* KEY POINT BOX */
+.keybox{
+  background:var(--surface);border:1px solid var(--border);
+  border-left:3px solid var(--cat);border-radius:8px;
+  padding:18px 20px;margin:20px 0;
+}
+.keybox-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--cat);letter-spacing:.15em;margin-bottom:8px}
+.keybox-text{font-size:.9rem;line-height:1.8;color:var(--text)}
+
+/* ASPECT DIAGRAM */
+.aspect-diagram{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  margin:20px 0;
+}
+.asp-box{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:18px 16px;text-align:center;transition:border-color .2s;
+}
+.asp-box.simple{border-top:3px solid var(--cat2)}
+.asp-box.prog{border-top:3px solid var(--accent)}
+.asp-box.perf{border-top:3px solid var(--green)}
+.asp-icon{font-size:1.6rem;margin-bottom:8px}
+.asp-name{font-family:'JetBrains Mono',monospace;font-size:.65rem;letter-spacing:.1em;margin-bottom:4px}
+.asp-box.simple .asp-name{color:var(--cat2)}
+.asp-box.prog .asp-name{color:var(--accent)}
+.asp-box.perf .asp-name{color:var(--green)}
+.asp-jp{font-size:.85rem;font-weight:500;margin-bottom:4px}
+.asp-en{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted)}
+
+/* EXAMPLE TABLE */
+.ex-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:.85rem}
+.ex-table th{
+  font-family:'JetBrains Mono',monospace;font-size:.62rem;letter-spacing:.1em;
+  color:var(--muted);text-align:left;padding:8px 12px;
+  border-bottom:1px solid var(--border);font-weight:400;
+}
+.ex-table td{padding:10px 12px;border-bottom:1px solid rgba(42,45,56,.5);line-height:1.5}
+.ex-table tr:last-child td{border-bottom:none}
+.ex-table .aspect{font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted)}
+.ex-table .form{color:var(--accent);font-weight:500}
+.ex-table .jp{color:var(--muted);font-size:.78rem}
+
+/* MATCH / CLICK REVEAL */
+.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.match-jp{
+  background:var(--sf2);border:1px solid var(--border);border-radius:6px;
+  padding:12px 16px;font-size:.85rem;cursor:pointer;
+  transition:border-color .2s,background .2s;
+  display:flex;flex-direction:column;gap:4px;
+}
+.match-jp:hover{border-color:var(--cat)}
+.match-jp .jp-text{color:var(--text)}
+.match-jp .reveal{
+  font-family:'JetBrains Mono',monospace;font-size:.72rem;
+  color:transparent;background:var(--border);border-radius:3px;
+  transition:color .3s,background .3s;padding:2px 6px;align-self:flex-start;
+}
+.match-jp.shown .reveal{color:var(--accent);background:rgba(200,169,110,.1)}
+.match-label{font-family:'JetBrains Mono',monospace;font-size:.6rem;color:var(--muted);margin-bottom:4px;letter-spacing:.1em}
+
+/* FILL-IN-THE-BLANK */
+.fill-sentence{
+  background:var(--surface);border:1px solid var(--border);border-radius:8px;
+  padding:20px 24px;margin:12px 0;display:flex;align-items:center;flex-wrap:wrap;gap:6px;
+  font-size:.95rem;line-height:2;
+}
+.blank{
+  display:inline-block;min-width:140px;
+  border-bottom:2px solid var(--cat);padding:2px 8px;
+  font-family:'JetBrains Mono',monospace;font-size:.85rem;
+  color:var(--text);background:transparent;
+  outline:none;text-align:center;
+  transition:border-color .2s;
+}
+.blank:focus{border-color:var(--accent)}
+.blank.correct{border-color:var(--green);color:var(--green)}
+.blank.wrong{border-color:var(--red);color:var(--red)}
+.fill-hint{font-size:.75rem;color:var(--muted);margin-left:4px}
+.fill-check-btn{
+  margin-top:16px;padding:8px 20px;background:var(--cat);
+  color:#0e0f13;border:none;border-radius:6px;
+  font-family:'Noto Sans JP',sans-serif;font-size:.82rem;font-weight:500;
+  cursor:pointer;transition:opacity .2s;
+}
+.fill-check-btn:hover{opacity:.85}
+
+/* CHOICE CHECK */
+.choice-q{margin:16px 0}
+.choice-q .q-text{font-size:.9rem;margin-bottom:10px;color:var(--text)}
+.choice-opts{display:flex;flex-direction:column;gap:8px}
+.choice-opt{
+  background:var(--sf2);border:1.5px solid var(--border);border-radius:6px;
+  padding:10px 16px;font-size:.85rem;cursor:pointer;
+  transition:all .2s;text-align:left;color:var(--text);
+  display:flex;gap:10px;align-items:center;
+}
+.choice-opt:hover:not(:disabled){border-color:var(--cat)}
+.choice-opt.correct{border-color:var(--green);background:rgba(126,201,160,.08);color:var(--green)}
+.choice-opt.wrong{border-color:var(--red);background:rgba(201,126,126,.08);color:var(--red)}
+.opt-key{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);min-width:16px}
+
+/* SORT */
+.sort-area{margin:20px 0}
+.sort-tiles{display:flex;flex-wrap:wrap;gap:8px;min-height:44px;margin-bottom:12px}
+.sort-bank{display:flex;flex-wrap:wrap;gap:8px;padding:16px;background:var(--sf2);border:1px dashed var(--border);border-radius:8px;min-height:52px}
+.tile{
+  padding:6px 14px;background:var(--surface);border:1px solid var(--border);
+  border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:.78rem;
+  color:var(--text);cursor:pointer;transition:all .2s;user-select:none;
+}
+.tile:hover{border-color:var(--cat);color:var(--cat)}
+.tile.placed{background:rgba(168,126,201,.1);border-color:var(--cat);color:var(--cat)}
+.sort-result{font-size:.8rem;padding:8px 12px;border-radius:6px;display:none;margin-top:8px}
+.sort-result.ok{background:rgba(126,201,160,.1);border:1px solid rgba(126,201,160,.3);color:var(--green);display:block}
+.sort-result.ng{background:rgba(201,126,126,.1);border:1px solid rgba(201,126,126,.3);color:var(--red);display:block}
+
+/* SECTION DIVIDER */
+.s-divider{height:1px;background:var(--border);margin:40px 0}
+
+/* NEXT BUTTON */
+.next-section-btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:12px 28px;background:transparent;
+  border:1px solid var(--cat);border-radius:6px;
+  color:var(--cat);font-family:'Noto Sans JP',sans-serif;
+  font-size:.88rem;font-weight:500;cursor:pointer;
+  transition:all .2s;margin-top:8px;
+}
+.next-section-btn:hover{background:var(--cat);color:#0e0f13}
+.next-section-btn:disabled{opacity:.3;cursor:default}
+
+/* COMPLETION BANNER */
+.completion{
+  background:linear-gradient(135deg,rgba(168,126,201,.15),rgba(126,201,160,.1));
+  border:1px solid var(--cat);border-radius:12px;
+  padding:32px;text-align:center;display:none;margin-top:32px;
+}
+.completion.show{display:block}
+.completion h3{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:8px}
+.completion p{color:var(--muted);font-size:.88rem;margin-bottom:24px}
+.completion-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn-primary{padding:11px 28px;background:var(--cat);color:#0e0f13;border:none;border-radius:6px;font-size:.88rem;font-weight:500;cursor:pointer;transition:opacity .2s;text-decoration:none;display:inline-block}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{padding:11px 28px;background:transparent;color:var(--muted);border:1px solid var(--border);border-radius:6px;font-size:.88rem;cursor:pointer;transition:all .2s;text-decoration:none;display:inline-block}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+
+@media(max-width:600px){
+  nav,main,.unit-header,.lesson-progress{padding-left:20px;padding-right:20px}
+  .match-grid{grid-template-columns:1fr}
+  .aspect-diagram{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-links">
+    <a href="../index.html">English Grammar</a>
+    <span class="nav-sep">/</span>
+    <a href="#">Unit 08</a>
+    <span class="nav-sep">/</span>
+    <span style="color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.7rem">説明</span>
+  </div>
+  <div class="nav-steps">
+    <a class="step-dot active" href="08_explain.html">① 説明</a>
+    <a class="step-dot" href="08_quiz.html">② クイズ</a>
+    <a class="step-dot" href="08_speaking.html">③ 発話</a>
+    <a class="step-dot" href="08_pair.html">④ ペア</a>
+  </div>
+</nav>
+
+<div class="unit-header">
+  <div class="unit-badge">UNIT 08 — VERBS</div>
+  <div class="unit-title">単純・進行・完了</div>
+  <div class="unit-sub">Simple / Progressive / Perfect Aspect</div>
+  <div class="unit-desc">英語の「アスペクト」は、動作が「いつ行われているか」だけでなく、「どのような進み具合か」を表します。同じ現在でも、単純形・進行形・完了形で伝わるニュアンスがまったく異なります。</div>
+</div>
+
+<div class="lesson-progress">
+  <div class="lp-step current" id="lp1"><div class="lp-dot">1</div>アスペクトとは</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp2"><div class="lp-dot">2</div>3つの形</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp3"><div class="lp-dot">3</div>形の確認</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp4"><div class="lp-dot">4</div>使い分け</div>
+  <div class="lp-line"></div>
+  <div class="lp-step" id="lp5"><div class="lp-dot">5</div>並べ替え</div>
+</div>
+
+<main>
+
+<!-- ════ SECTION 1：アスペクトとは ════ -->
+<div class="section visible" id="sec1">
+  <div class="section-num">SECTION 1 / 5</div>
+  <div class="section-title">アスペクトとは何か</div>
+
+  <p class="prose">
+    時制（いつ？）は Unit 07 で学びました。Unit 08 では<strong>アスペクト（aspect）</strong>を学びます。
+    アスペクトとは、動作や状態が「<em>どのような進み具合か</em>」を動詞の形で表す仕組みです。
+  </p>
+
+  <div class="keybox">
+    <div class="keybox-label">KEY POINT</div>
+    <div class="keybox-text">
+      時制 → <em>いつ</em>（過去・現在・未来）<br>
+      アスペクト → <em>どんな状態か</em>（完了した？進行中？繰り返し？）<br><br>
+      英語は時制とアスペクトを<strong>組み合わせて</strong>動詞の形を決める。
+    </div>
+  </div>
+
+  <p class="prose">下の例を見てください。どれも「現在」の話ですが、伝わるニュアンスが違います。クリックして英語を確認してください。</p>
+
+  <div class="match-label">TAP TO REVEAL — 日本語 → 英語</div>
+  <div class="match-grid">
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私はコーヒーを飲みます。（習慣）</div>
+      <div class="reveal">I <strong>drink</strong> coffee. 〔単純形〕</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私は今コーヒーを飲んでいます。</div>
+      <div class="reveal">I <strong>am drinking</strong> coffee. 〔進行形〕</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私はもうコーヒーを飲みました。</div>
+      <div class="reveal">I <strong>have drunk</strong> coffee. 〔完了形〕</div>
+    </div>
+    <div class="match-jp" onclick="this.classList.toggle('shown')">
+      <div class="jp-text">私はずっとコーヒーを飲んでいます。</div>
+      <div class="reveal">I <strong>have been drinking</strong> coffee. 〔完了進行形〕</div>
+    </div>
+  </div>
+
+  <button class="next-section-btn" onclick="goSection(2)">次へ：3つの形 →</button>
+</div>
+
+<!-- ════ SECTION 2：3つのアスペクト ════ -->
+<div class="section" id="sec2">
+  <div class="section-num">SECTION 2 / 5</div>
+  <div class="section-title">3つのアスペクトを整理する</div>
+
+  <p class="prose">英語の主要なアスペクトは3つです。それぞれのイメージと使い方を確認しましょう。</p>
+
+  <div class="aspect-diagram">
+    <div class="asp-box simple">
+      <div class="asp-icon">📌</div>
+      <div class="asp-name">SIMPLE</div>
+      <div class="asp-jp">単純形</div>
+      <div class="asp-en">動詞の原形 / -s / -ed / will</div>
+    </div>
+    <div class="asp-box prog">
+      <div class="asp-icon">🔄</div>
+      <div class="asp-name">PROGRESSIVE</div>
+      <div class="asp-jp">進行形</div>
+      <div class="asp-en">be + -ing</div>
+    </div>
+    <div class="asp-box perf">
+      <div class="asp-icon">✅</div>
+      <div class="asp-name">PERFECT</div>
+      <div class="asp-jp">完了形</div>
+      <div class="asp-en">have + 過去分詞</div>
+    </div>
+  </div>
+
+  <table class="ex-table">
+    <thead>
+      <tr><th>アスペクト</th><th>形（現在）</th><th>例文</th><th>ニュアンス</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="aspect">単純形</td>
+        <td class="form">動詞 (+s)</td>
+        <td>She <strong>studies</strong> English.</td>
+        <td class="jp">習慣・事実・繰り返し</td>
+      </tr>
+      <tr>
+        <td class="aspect">進行形</td>
+        <td class="form">is/am/are + -ing</td>
+        <td>She <strong>is studying</strong> English.</td>
+        <td class="jp">今まさに進行中</td>
+      </tr>
+      <tr>
+        <td class="aspect">完了形</td>
+        <td class="form">have/has + 過去分詞</td>
+        <td>She <strong>has studied</strong> English.</td>
+        <td class="jp">完了・経験・継続（現在との関連）</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="keybox">
+    <div class="keybox-label">進行形 vs 単純形</div>
+    <div class="keybox-text">
+      <strong>I read books.</strong> → 習慣（いつも読む）<br>
+      <strong>I am reading a book.</strong> → 今この瞬間読んでいる<br><br>
+      状態動詞（know / like / want など）は通常<strong>進行形にしない</strong>。<br>
+      例：✗ <span style="color:var(--red)">I am knowing</span>　✓ <span style="color:var(--green)">I know</span>
+    </div>
+  </div>
+
+  <p class="prose" style="margin-top:24px">理解度チェック。正しいものを選んでください。</p>
+
+  <div class="choice-q" id="cq1">
+    <div class="q-text">「彼は今電話で話しています」に使う形は？</div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkChoice('cq1',this,false)"><span class="opt-key">A</span>単純形（he talks）</button>
+      <button class="choice-opt" onclick="checkChoice('cq1',this,true)"><span class="opt-key">B</span>進行形（he is talking）</button>
+      <button class="choice-opt" onclick="checkChoice('cq1',this,false)"><span class="opt-key">C</span>完了形（he has talked）</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="cq2">
+    <div class="q-text">「彼女はパリに行ったことがある」に使う形は？</div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkChoice('cq2',this,false)"><span class="opt-key">A</span>単純形（she goes）</button>
+      <button class="choice-opt" onclick="checkChoice('cq2',this,false)"><span class="opt-key">B</span>進行形（she is going）</button>
+      <button class="choice-opt" onclick="checkChoice('cq2',this,true)"><span class="opt-key">C</span>完了形（she has been）</button>
+    </div>
+  </div>
+
+  <button class="next-section-btn" id="btn-sec3" onclick="goSection(3)" disabled>次へ：形の確認 →</button>
+</div>
+
+<!-- ════ SECTION 3：形の確認 ════ -->
+<div class="section" id="sec3">
+  <div class="section-num">SECTION 3 / 5</div>
+  <div class="section-title">動詞の形を確認する</div>
+
+  <p class="prose">空欄に正しい形を入れてください。ヒントを参考に考えてみましょう。</p>
+
+  <div class="fill-sentence">
+    They <input class="blank" data-ans="are watching" placeholder="watch→進行形" id="f1"> TV right now.
+    <span class="fill-hint">（今まさに → 現在進行形）</span>
+  </div>
+  <div class="fill-sentence">
+    She <input class="blank" data-ans="has lived" placeholder="live→完了形" id="f2"> in Tokyo for five years.
+    <span class="fill-hint">（5年間ずっと → 現在完了）</span>
+  </div>
+  <div class="fill-sentence">
+    He <input class="blank" data-ans="works" placeholder="work→単純形" id="f3"> at a hospital.
+    <span class="fill-hint">（職業・習慣 → 現在単純形）</span>
+  </div>
+  <div class="fill-sentence">
+    I <input class="blank" data-ans="have never eaten" placeholder="eat→経験" id="f4"> sushi before.
+    <span class="fill-hint">（経験「〜したことがない」→ 現在完了）</span>
+  </div>
+
+  <button class="fill-check-btn" onclick="checkFills()">答え合わせ</button>
+
+  <button class="next-section-btn" id="btn-sec4" onclick="goSection(4)" disabled style="margin-top:20px">次へ：使い分け →</button>
+</div>
+
+<!-- ════ SECTION 4：使い分け ════ -->
+<div class="section" id="sec4">
+  <div class="section-num">SECTION 4 / 5</div>
+  <div class="section-title">アスペクトを選んで文を作る</div>
+
+  <p class="prose">日本語の意味に合うアスペクトを選んでください。正解すると次の問題へ進みます。</p>
+
+  <div class="choice-q" id="sq1">
+    <div class="q-text">「私はもう宿題を終わらせました。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">I ___ my homework.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,false)"><span class="opt-key">A</span>finish（単純形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,true)"><span class="opt-key">B</span>have finished（完了形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq1','sq2',this,false)"><span class="opt-key">C</span>am finishing（進行形）</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="sq2" style="display:none">
+    <div class="q-text">「彼は今本を読んでいます。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">He ___ a book.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,false)"><span class="opt-key">A</span>reads（単純形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,true)"><span class="opt-key">B</span>is reading（進行形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq2','sq3',this,false)"><span class="opt-key">C</span>has read（完了形）</button>
+    </div>
+  </div>
+
+  <div class="choice-q" id="sq3" style="display:none">
+    <div class="q-text">「私は3回京都を訪れたことがあります。」<br><span style="font-family:'JetBrains Mono',monospace;font-size:.75rem;color:var(--muted)">I ___ Kyoto three times.</span></div>
+    <div class="choice-opts">
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,false)"><span class="opt-key">A</span>visit（単純形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,false)"><span class="opt-key">B</span>am visiting（進行形）</button>
+      <button class="choice-opt" onclick="checkSQ('sq3',null,this,true)"><span class="opt-key">C</span>have visited（完了形）</button>
+    </div>
+  </div>
+
+  <button class="next-section-btn" id="btn-sec5" onclick="goSection(5)" disabled style="margin-top:8px">次へ：並べ替え →</button>
+</div>
+
+<!-- ════ SECTION 5：並べ替え ════ -->
+<div class="section" id="sec5">
+  <div class="section-num">SECTION 5 / 5</div>
+  <div class="section-title">語句を並べ替えて文を作る</div>
+
+  <p class="prose">タイルをクリックして正しい語順に並べてください。</p>
+
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">「彼女は2時間ずっと勉強しています。」</p>
+  <div class="sort-area" id="sort1">
+    <div class="sort-tiles" id="sort1-answer"></div>
+    <div class="sort-bank" id="sort1-bank"></div>
+    <div class="sort-result" id="sort1-result"></div>
+    <button class="fill-check-btn" onclick="checkSort('sort1',['She','has','been','studying','for','two','hours','.'])">確認</button>
+    <button class="fill-check-btn" style="background:var(--sf2);color:var(--muted);margin-left:8px" onclick="resetSort('sort1')">リセット</button>
+  </div>
+
+  <div class="s-divider"></div>
+
+  <p style="font-size:.82rem;color:var(--muted);margin-bottom:6px">「私たちは昨日から雨が降っているのを見ています。」→「昨日から雨が降り続いています。」</p>
+  <div class="sort-area" id="sort2">
+    <div class="sort-tiles" id="sort2-answer"></div>
+    <div class="sort-bank" id="sort2-bank"></div>
+    <div class="sort-result" id="sort2-result"></div>
+    <button class="fill-check-btn" onclick="checkSort('sort2',['It','has','been','raining','since','yesterday','.'])">確認</button>
+    <button class="fill-check-btn" style="background:var(--sf2);color:var(--muted);margin-left:8px" onclick="resetSort('sort2')">リセット</button>
+  </div>
+
+  <button class="next-section-btn" id="btn-complete" onclick="complete()" style="margin-top:16px">説明を完了する ✓</button>
+</div>
+
+<!-- COMPLETION -->
+<div class="completion" id="completion">
+  <h3>🎉 説明パート完了！</h3>
+  <p>単純・進行・完了のアスペクトの基本をおさえました。次はクイズで定着させましょう。</p>
+  <div class="completion-btns">
+    <a class="btn-primary" href="08_quiz.html">② クイズへ進む →</a>
+    <a class="btn-ghost" href="../index.html">← トップへ</a>
+  </div>
+</div>
+
+</main>
+
+<script>
+// ── Section navigation ──
+const sections = ['sec1','sec2','sec3','sec4','sec5'];
+const lpSteps  = ['lp1','lp2','lp3','lp4','lp5'];
+
+function goSection(n) {
+  const prev = document.getElementById(lpSteps[n-2]);
+  if(prev){ prev.classList.remove('current'); prev.classList.add('done'); prev.querySelector('.lp-dot').textContent='✓'; }
+  const cur = document.getElementById(lpSteps[n-1]);
+  if(cur){ cur.classList.add('current'); }
+  document.querySelectorAll('.lp-line').forEach((l,i)=>{ if(i<n-1) l.style.background='var(--green)'; });
+  const sec = document.getElementById('sec'+n);
+  if(sec){ sec.classList.add('visible'); sec.scrollIntoView({behavior:'smooth',block:'start'}); }
+}
+
+// ── Choice checks (sec2) ──
+let cq1done=false, cq2done=false;
+function checkChoice(qid, btn, correct) {
+  const wrap = document.getElementById(qid);
+  wrap.querySelectorAll('.choice-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(qid==='cq1') cq1done=true;
+  if(qid==='cq2'){ cq2done=true; }
+  if(cq1done&&cq2done) document.getElementById('btn-sec3').disabled=false;
+}
+
+// ── Fill-in checks ──
+function checkFills(){
+  let allOk=true;
+  ['f1','f2','f3','f4'].forEach(id=>{
+    const inp=document.getElementById(id);
+    const val=inp.value.trim().toLowerCase();
+    const ans=inp.dataset.ans.toLowerCase();
+    inp.classList.remove('correct','wrong');
+    if(val===ans){ inp.classList.add('correct'); }
+    else{ inp.classList.add('wrong'); allOk=false; }
+  });
+  document.getElementById('btn-sec4').disabled=false;
+}
+
+// ── Sequential choice (sec4) ──
+function checkSQ(qid, nextId, btn, correct){
+  const wrap=document.getElementById(qid);
+  wrap.querySelectorAll('.choice-opt').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(qid==='sq3'){ document.getElementById('btn-sec5').disabled=false; }
+  if(nextId && correct){
+    setTimeout(()=>{
+      const next=document.getElementById(nextId);
+      next.style.display='block';
+      next.scrollIntoView({behavior:'smooth',block:'nearest'});
+    }, 600);
+  } else if(nextId && !correct){
+    setTimeout(()=>{
+      wrap.querySelectorAll('.choice-opt').forEach(b=>{ b.disabled=false; b.classList.remove('correct','wrong'); });
+    }, 1000);
+  }
+}
+
+// ── Sort / word order ──
+const sortData = {
+  sort1: ['She','has','been','studying','for','two','hours','.'],
+  sort2: ['It','has','been','raining','since','yesterday','.'],
+};
+
+function initSort(id){
+  const words=[...sortData[id]].sort(()=>Math.random()-.5);
+  const bank=document.getElementById(id+'-bank');
+  bank.innerHTML='';
+  document.getElementById(id+'-answer').innerHTML='';
+  document.getElementById(id+'-result').className='sort-result';
+  words.forEach(w=>{
+    const t=document.createElement('span');
+    t.className='tile'; t.textContent=w;
+    t.onclick=()=>moveTile(t,id,'bank','answer');
+    bank.appendChild(t);
+  });
+}
+function moveTile(tile, id, from, to){
+  tile.classList.toggle('placed', from==='bank');
+  document.getElementById(id+'-'+to).appendChild(tile);
+  tile.onclick=()=>moveTile(tile,id,to,from);
+}
+function checkSort(id, correct){
+  const tiles=[...document.getElementById(id+'-answer').querySelectorAll('.tile')];
+  const ans=tiles.map(t=>t.textContent).join(' ');
+  const corr=correct.join(' ');
+  const res=document.getElementById(id+'-result');
+  if(ans===corr){ res.className='sort-result ok'; res.textContent='✅ 正解！ '+corr; }
+  else{ res.className='sort-result ng'; res.textContent='❌ 正解: '+corr; }
+}
+function resetSort(id){ initSort(id); }
+
+// ── Complete ──
+function complete(){
+  try{ localStorage.setItem('unit_8_explain','1'); }catch(e){}
+  sendProgress({ unit:8, step:1, stepName:'説明', elapsed:getElapsed() });
+  document.getElementById('completion').classList.add('show');
+  document.getElementById('completion').scrollIntoView({behavior:'smooth'});
+  const lp=document.getElementById('lp5');
+  lp.classList.remove('current'); lp.classList.add('done'); lp.querySelector('.lp-dot').textContent='✓';
+}
+
+// ── Intersection observer ──
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('visible'); });
+},{threshold:0.1});
+document.querySelectorAll('.section').forEach(s=>observer.observe(s));
+
+initSort('sort1');
+initSort('sort2');
+</script>
+<script src="../progress.js"></script>
+</body>
+</html>
