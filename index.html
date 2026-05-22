@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>English Grammar — 英文法学習サイト</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #0e0f13;
+    --surface:   #16181f;
+    --border:    #2a2d38;
+    --accent:    #c8a96e;
+    --accent2:   #7eb8c9;
+    --text:      #e8e6e0;
+    --muted:     #6b6f7e;
+    --cat-a:     #c8a96e;
+    --cat-b:     #7eb8c9;
+    --cat-c:     #a87ec9;
+    --cat-d:     #7ec9a0;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── noise overlay ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    background-size: 200px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── header ── */
+  header {
+    position: relative;
+    z-index: 1;
+    padding: 64px 48px 48px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 24px;
+  }
+
+  .logo-en {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    color: var(--text);
+  }
+  .logo-en span { color: var(--accent); }
+
+  .logo-jp {
+    font-size: 0.78rem;
+    color: var(--muted);
+    letter-spacing: 0.2em;
+    margin-top: 8px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+  .header-meta strong { color: var(--accent); font-weight: 600; }
+
+  /* ── progress bar ── */
+  .progress-section {
+    position: relative; z-index: 1;
+    padding: 32px 48px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .progress-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .progress-track {
+    flex: 1;
+    min-width: 200px;
+    height: 2px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    transition: width 0.8s ease;
+  }
+  .progress-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    white-space: nowrap;
+  }
+
+  /* ── main grid ── */
+  main {
+    position: relative; z-index: 1;
+    padding: 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .category-block { margin-bottom: 56px; }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+  .category-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .category-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .category-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* category color accents */
+  .cat-sentence .category-name { color: var(--cat-a); }
+  .cat-noun     .category-name { color: var(--cat-b); }
+  .cat-verb     .category-name { color: var(--cat-c); }
+  .cat-adj      .category-name { color: var(--cat-d); }
+  .cat-adv      .category-name { color: var(--cat-a); }
+
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px 22px;
+    text-decoration: none;
+    color: var(--text);
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: border-color 0.2s, transform 0.2s, background 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::after {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .card:hover { transform: translateY(-2px); background: #1c1f29; }
+  .card:hover::after { opacity: 1; }
+
+  .cat-sentence .card::after { background: var(--cat-a); }
+  .cat-noun     .card::after { background: var(--cat-b); }
+  .cat-verb     .card::after { background: var(--cat-c); }
+  .cat-adj      .card::after { background: var(--cat-d); }
+  .cat-adv      .card::after { background: var(--cat-a); }
+
+  .cat-sentence .card:hover { border-color: var(--cat-a); }
+  .cat-noun     .card:hover { border-color: var(--cat-b); }
+  .cat-verb     .card:hover { border-color: var(--cat-c); }
+  .cat-adj      .card:hover { border-color: var(--cat-d); }
+  .cat-adv      .card:hover { border-color: var(--cat-a); }
+
+  .card-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding-top: 3px;
+    min-width: 24px;
+  }
+  .card-body { flex: 1; }
+  .card-title {
+    font-size: 0.92rem;
+    font-weight: 500;
+    line-height: 1.4;
+    margin-bottom: 4px;
+  }
+  .card-sub {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: 'JetBrains Mono', monospace;
+  }
+  .card-badge {
+    font-size: 0.6rem;
+    padding: 2px 7px;
+    border-radius: 20px;
+    font-family: 'JetBrains Mono', monospace;
+    align-self: flex-start;
+  }
+  .badge-done { background: rgba(126,201,160,0.15); color: var(--cat-d); border: 1px solid rgba(126,201,160,0.3); }
+  .badge-new  { background: rgba(200,169,110,0.12); color: var(--accent); border: 1px solid rgba(200,169,110,0.25); }
+
+  /* ── footer ── */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 24px 48px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--muted);
+  }
+
+  /* ── animations ── */
+  .card { opacity: 0; transform: translateY(12px); animation: fadeUp 0.4s ease forwards; }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+
+  /* stagger per card */
+  .card:nth-child(1)  { animation-delay: 0.05s; }
+  .card:nth-child(2)  { animation-delay: 0.10s; }
+  .card:nth-child(3)  { animation-delay: 0.15s; }
+  .card:nth-child(4)  { animation-delay: 0.20s; }
+  .card:nth-child(5)  { animation-delay: 0.25s; }
+  .card:nth-child(6)  { animation-delay: 0.30s; }
+  .card:nth-child(7)  { animation-delay: 0.35s; }
+
+  @media (max-width: 640px) {
+    header, main, .progress-section, footer { padding: 24px 20px; }
+    .card-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="logo-en">English <span>Grammar</span></div>
+    <div class="logo-jp">// 英文法学習サイト</div>
+  </div>
+  <div class="header-meta">
+    <div>対象レベル <strong>大学生・社会人</strong></div>
+    <div>全 <strong>20</strong> ユニット</div>
+  </div>
+</header>
+
+<div class="progress-section">
+  <div class="progress-label">OVERALL PROGRESS</div>
+  <div class="progress-track"><div class="progress-fill" id="prog-fill"></div></div>
+  <div class="progress-count" id="prog-count">0 / 20</div>
+</div>
+
+<main>
+
+  <!-- 文の形 -->
+  <section class="category-block cat-sentence">
+    <div class="category-header">
+      <div class="category-label">Section 01</div>
+      <div class="category-name">文の形</div>
+      <div class="category-line"></div>
+    </div>
+    <div class="card-grid">
+      <a class="card" href="quizzes/01_verb_decides.html">
+        <div class="card-num">01</div>
+        <div class="card-body">
+          <div class="card-title">動詞が決める</div>
+          <div class="card-sub">Verb-centered structure</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/02_vs_japanese.html">
+        <div class="card-num">02</div>
+        <div class="card-body">
+          <div class="card-title">日本語との比較</div>
+          <div class="card-sub">EN vs JP comparison</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 名詞 -->
+  <section class="category-block cat-noun">
+    <div class="category-header">
+      <div class="category-label">Section 02</div>
+      <div class="category-name">名詞 — Nouns</div>
+      <div class="category-line"></div>
+    </div>
+    <div class="card-grid">
+      <a class="card" href="quizzes/03_countable.html">
+        <div class="card-num">03</div>
+        <div class="card-body">
+          <div class="card-title">可算・不可算</div>
+          <div class="card-sub">Countable / Uncountable</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/04_gerund.html">
+        <div class="card-num">04</div>
+        <div class="card-body">
+          <div class="card-title">動名詞</div>
+          <div class="card-sub">Gerund</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/05_infinitive_noun.html">
+        <div class="card-num">05</div>
+        <div class="card-body">
+          <div class="card-title">不定詞（名詞的用法）</div>
+          <div class="card-sub">Infinitive as noun</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 動詞 -->
+  <section class="category-block cat-verb">
+    <div class="category-header">
+      <div class="category-label">Section 03</div>
+      <div class="category-name">動詞 — Verbs</div>
+      <div class="category-line"></div>
+    </div>
+    <div class="card-grid">
+      <a class="card" href="quizzes/06_verb_types.html">
+        <div class="card-num">06</div>
+        <div class="card-body">
+          <div class="card-title">一般動詞・be動詞</div>
+          <div class="card-sub">Action / Be verbs</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/07_present_future.html">
+        <div class="card-num">07</div>
+        <div class="card-body">
+          <div class="card-title">現在・過去・未来</div>
+          <div class="card-sub">Present / Past / Future</div>
+        </div>
+        <span class="card-badge badge-done">DONE</span>
+      </a>
+      <a class="card" href="quizzes/08_aspects.html">
+        <div class="card-num">08</div>
+        <div class="card-body">
+          <div class="card-title">単純・進行・完了</div>
+          <div class="card-sub">Simple / Progressive / Perfect</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/09_modal.html">
+        <div class="card-num">09</div>
+        <div class="card-body">
+          <div class="card-title">助動詞</div>
+          <div class="card-sub">Modal verbs</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/10_passive.html">
+        <div class="card-num">10</div>
+        <div class="card-body">
+          <div class="card-title">受動態</div>
+          <div class="card-sub">Passive voice</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/11_question_neg.html">
+        <div class="card-num">11</div>
+        <div class="card-body">
+          <div class="card-title">疑問・否定</div>
+          <div class="card-sub">Questions / Negatives</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 形容詞 -->
+  <section class="category-block cat-adj">
+    <div class="category-header">
+      <div class="category-label">Section 04</div>
+      <div class="category-name">形容詞 — Adjectives</div>
+      <div class="category-line"></div>
+    </div>
+    <div class="card-grid">
+      <a class="card" href="quizzes/12_articles.html">
+        <div class="card-num">12</div>
+        <div class="card-body">
+          <div class="card-title">冠詞</div>
+          <div class="card-sub">Articles (a / an / the)</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/13_participle_adj.html">
+        <div class="card-num">13</div>
+        <div class="card-body">
+          <div class="card-title">分詞（形容詞的用法）</div>
+          <div class="card-sub">Participle as adjective</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/14_rel_pronoun.html">
+        <div class="card-num">14</div>
+        <div class="card-body">
+          <div class="card-title">関係代名詞</div>
+          <div class="card-sub">Relative pronouns</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/15_comparison_adj.html">
+        <div class="card-num">15</div>
+        <div class="card-body">
+          <div class="card-title">比較（形容詞）</div>
+          <div class="card-sub">Comparative / Superlative</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/16_prep_phrase_adj.html">
+        <div class="card-num">16</div>
+        <div class="card-body">
+          <div class="card-title">前置詞句（形容詞的）</div>
+          <div class="card-sub">Prepositional phrase as adj.</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- 副詞 -->
+  <section class="category-block cat-adv">
+    <div class="category-header">
+      <div class="category-label">Section 05</div>
+      <div class="category-name">副詞 — Adverbs</div>
+      <div class="category-line"></div>
+    </div>
+    <div class="card-grid">
+      <a class="card" href="quizzes/17_conjunction.html">
+        <div class="card-num">17</div>
+        <div class="card-body">
+          <div class="card-title">接続詞</div>
+          <div class="card-sub">Conjunctions</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/18_comparison_adv.html">
+        <div class="card-num">18</div>
+        <div class="card-body">
+          <div class="card-title">比較（副詞）</div>
+          <div class="card-sub">Adverbial comparison</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/19_prep_phrase_adv.html">
+        <div class="card-num">19</div>
+        <div class="card-body">
+          <div class="card-title">前置詞句（副詞的）</div>
+          <div class="card-sub">Prepositional phrase as adv.</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+      <a class="card" href="quizzes/20_rel_adverb.html">
+        <div class="card-num">20</div>
+        <div class="card-body">
+          <div class="card-title">関係副詞</div>
+          <div class="card-sub">Relative adverbs</div>
+        </div>
+        <span class="card-badge badge-new">NEW</span>
+      </a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <p>English Grammar — 英文法学習サイト</p>
+  <p id="footer-date"></p>
+</footer>
+
+<script>
+  // progress (localStorage-based, per unit)
+  const total = 20;
+  let done = 0;
+  try {
+    for (let i = 1; i <= total; i++) {
+      if (localStorage.getItem(`unit_${i}_done`) === '1') done++;
+    }
+  } catch(e) {}
+  document.getElementById('prog-fill').style.width = `${(done/total)*100}%`;
+  document.getElementById('prog-count').textContent = `${done} / ${total}`;
+
+  // footer date
+  document.getElementById('footer-date').textContent =
+    new Date().toLocaleDateString('ja-JP', { year:'numeric', month:'long', day:'numeric' });
+</script>
+</body>
+</html>

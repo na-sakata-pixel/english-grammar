@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>教師用ダッシュボード — English Grammar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Noto+Sans+JP:wght@300;400;500&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0e0f13;
+  --surface: #16181f;
+  --sf2:     #1c1f29;
+  --border:  #2a2d38;
+  --accent:  #c8a96e;
+  --cat:     #a87ec9;
+  --cat2:    #7eb8c9;
+  --green:   #7ec9a0;
+  --red:     #c97e7e;
+  --text:    #e8e6e0;
+  --muted:   #6b6f7e;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans JP',sans-serif;font-weight:300;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");background-size:200px;pointer-events:none;z-index:0}
+
+/* HEADER */
+header{position:relative;z-index:1;padding:32px 40px 24px;border-bottom:1px solid var(--border);display:flex;align-items:flex-end;justify-content:space-between;flex-wrap:wrap;gap:16px}
+.h-title{font-family:'Playfair Display',serif;font-size:clamp(1.4rem,3vw,2rem);font-weight:700}
+.h-badge{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--accent);letter-spacing:.2em;margin-bottom:6px}
+.h-sub{font-family:'JetBrains Mono',monospace;font-size:.72rem;color:var(--muted);margin-top:4px}
+.h-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.btn{padding:9px 20px;border-radius:6px;border:none;font-size:.8rem;font-family:'Noto Sans JP',sans-serif;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--cat);color:#0e0f13}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--muted);border:1px solid var(--border)}
+.btn-ghost:hover{color:var(--text);border-color:var(--text)}
+
+/* SETUP BANNER */
+.setup-banner{position:relative;z-index:1;margin:20px 40px;background:rgba(200,169,110,.08);border:1px solid rgba(200,169,110,.3);border-radius:10px;padding:20px 24px}
+.setup-banner h3{font-size:.9rem;color:var(--accent);margin-bottom:10px;font-weight:500}
+.setup-steps{font-size:.82rem;color:#c0bdb5;line-height:2;counter-reset:step}
+.setup-steps li{counter-increment:step;list-style:none;padding-left:0;display:flex;gap:10px;align-items:flex-start}
+.setup-steps li::before{content:counter(step);font-family:'JetBrains Mono',monospace;font-size:.65rem;background:rgba(200,169,110,.2);color:var(--accent);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.url-input-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.url-input{flex:1;min-width:200px;padding:10px 14px;background:var(--sf2);border:1.5px solid var(--border);border-radius:6px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.78rem;outline:none;transition:border-color .2s}
+.url-input:focus{border-color:var(--accent)}
+.url-input::placeholder{color:var(--muted)}
+
+/* STATS ROW */
+.stats-row{position:relative;z-index:1;padding:20px 40px;border-bottom:1px solid var(--border);display:flex;gap:20px;flex-wrap:wrap}
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px 20px;min-width:120px}
+.stat-num{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;color:var(--cat)}
+.stat-label{font-family:'JetBrains Mono',monospace;font-size:.62rem;color:var(--muted);margin-top:2px}
+
+/* FILTER ROW */
+.filter-row{position:relative;z-index:1;padding:14px 40px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filter-label{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)}
+.filter-btn{padding:5px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.65rem;cursor:pointer;transition:all .2s}
+.filter-btn.active{background:var(--cat);color:#0e0f13;border-color:var(--cat)}
+.filter-btn:hover:not(.active){border-color:var(--cat);color:var(--cat)}
+.search-input{padding:6px 12px;background:var(--sf2);border:1px solid var(--border);border-radius:6px;color:var(--text);font-size:.8rem;outline:none;margin-left:auto;width:180px}
+.search-input:focus{border-color:var(--accent)}
+.search-input::placeholder{color:var(--muted)}
+
+/* TABS */
+.tabs{position:relative;z-index:1;padding:0 40px;border-bottom:1px solid var(--border);display:flex;gap:0}
+.tab{padding:14px 20px;font-family:'JetBrains Mono',monospace;font-size:.7rem;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.05em}
+.tab.active{color:var(--cat);border-bottom-color:var(--cat)}
+.tab:hover:not(.active){color:var(--text)}
+
+/* MAIN */
+main{position:relative;z-index:1;padding:28px 40px 80px}
+
+/* PROGRESS GRID */
+.grid-wrap{overflow-x:auto}
+.progress-grid{border-collapse:collapse;width:100%;font-size:.78rem;min-width:700px}
+.progress-grid th{
+  font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;
+  color:var(--muted);text-align:center;padding:8px 6px;
+  border-bottom:1px solid var(--border);border-right:1px solid rgba(42,45,56,.5);
+  white-space:nowrap;position:sticky;top:0;background:var(--bg);
+}
+.progress-grid th.name-col{text-align:left;padding-left:12px;min-width:120px;position:sticky;left:0;z-index:2;background:var(--bg)}
+.progress-grid td{padding:7px 6px;text-align:center;border-bottom:1px solid rgba(42,45,56,.4);border-right:1px solid rgba(42,45,56,.3)}
+.progress-grid td.name-cell{text-align:left;padding-left:12px;font-weight:400;color:var(--text);position:sticky;left:0;background:var(--surface);z-index:1;white-space:nowrap}
+.progress-grid tr:hover td{background:var(--sf2)}
+.progress-grid tr:hover td.name-cell{background:var(--sf2)}
+.unit-header{background:rgba(168,126,201,.08);color:var(--cat)!important;font-weight:600!important}
+.check{font-size:.85rem}
+.empty{color:var(--border);font-size:.65rem}
+.total-cell{font-family:'JetBrains Mono',monospace;font-size:.72rem;font-weight:600;color:var(--accent)}
+.pct-bar{height:3px;background:var(--border);border-radius:2px;margin-top:3px;overflow:hidden}
+.pct-fill{height:100%;background:linear-gradient(90deg,var(--cat),var(--cat2));border-radius:2px}
+
+/* LOG TABLE */
+.log-table{border-collapse:collapse;width:100%;font-size:.8rem}
+.log-table th{font-family:'JetBrains Mono',monospace;font-size:.6rem;letter-spacing:.08em;color:var(--muted);text-align:left;padding:8px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+.log-table td{padding:9px 12px;border-bottom:1px solid rgba(42,45,56,.4);vertical-align:top}
+.log-table tr:hover td{background:var(--sf2)}
+.log-step{display:inline-block;padding:2px 8px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:.62rem}
+.step-1{background:rgba(126,184,201,.1);color:var(--cat2)}
+.step-2{background:rgba(168,126,201,.1);color:var(--cat)}
+.step-3{background:rgba(200,169,110,.1);color:var(--accent)}
+.step-4{background:rgba(126,201,160,.1);color:var(--green)}
+.score-good{color:var(--green);font-weight:500}
+.score-mid{color:var(--accent);font-weight:500}
+.score-low{color:var(--red);font-weight:500}
+.ts{font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)}
+
+/* LOADING / EMPTY */
+.loading{text-align:center;padding:60px;color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:.8rem}
+.empty-state{text-align:center;padding:60px;color:var(--muted)}
+.empty-state p{font-size:.88rem;margin-top:8px}
+
+/* LAST UPDATED */
+.last-updated{font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted);padding:12px 40px;position:relative;z-index:1}
+
+@media(max-width:640px){
+  header,main,.stats-row,.filter-row,.tabs,.filter-row,.last-updated,.setup-banner{padding-left:20px;padding-right:20px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="h-badge">TEACHER DASHBOARD</div>
+    <div class="h-title">進捗ダッシュボード</div>
+    <div class="h-sub">English Grammar — 学習管理</div>
+  </div>
+  <div class="h-actions">
+    <span class="last-updated" id="last-updated" style="padding:0">--</span>
+    <button class="btn btn-ghost" onclick="loadData()">🔄 更新</button>
+    <button class="btn btn-primary" onclick="exportCSV()">📥 CSV出力</button>
+  </div>
+</header>
+
+<!-- SETUP BANNER -->
+<div class="setup-banner" id="setup-banner">
+  <h3>⚙️ 初回セットアップ — スプレッドシートのURLを設定してください</h3>
+  <ol class="setup-steps">
+    <li>Googleスプレッドシートを開く → 「ファイル」→「共有」→「ウェブに公開」</li>
+    <li>「シート」を「進捗サマリー」と「ログ」それぞれ CSV 形式で公開</li>
+    <li>発行されたURLをそれぞれ下に貼り付けて「保存」</li>
+  </ol>
+  <div class="url-input-row">
+    <input class="url-input" id="url-progress" placeholder="進捗サマリーシートのCSV URL" />
+    <input class="url-input" id="url-log" placeholder="ログシートのCSV URL" />
+    <button class="btn btn-primary" onclick="saveURLs()">保存して読み込む</button>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-row">
+  <div class="stat-card"><div class="stat-num" id="stat-students">—</div><div class="stat-label">学生数</div></div>
+  <div class="stat-card"><div class="stat-num" id="stat-completed">—</div><div class="stat-label">完了ステップ総数</div></div>
+  <div class="stat-card"><div class="stat-num" id="stat-avg">—</div><div class="stat-label">平均完了率</div></div>
+  <div class="stat-card"><div class="stat-num" id="stat-today">—</div><div class="stat-label">本日のアクセス</div></div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <div class="tab active" onclick="showTab('progress')">📊 進捗マトリクス</div>
+  <div class="tab" onclick="showTab('log')">📋 アクティビティログ</div>
+</div>
+
+<!-- FILTER ROW -->
+<div class="filter-row" id="filter-row">
+  <span class="filter-label">UNIT</span>
+  <button class="filter-btn active" onclick="filterUnit(0,this)">全て</button>
+  <button class="filter-btn" onclick="filterUnit(7,this)">U07</button>
+  <button class="filter-btn" onclick="filterUnit(1,this)">U01</button>
+  <button class="filter-btn" onclick="filterUnit(2,this)">U02</button>
+  <input class="search-input" id="search-input" placeholder="🔍 名前で検索..." oninput="filterName(this.value)" />
+</div>
+
+<div class="last-updated" id="data-info">データを読み込んでいます...</div>
+
+<main>
+  <!-- PROGRESS TAB -->
+  <div id="tab-progress">
+    <div class="grid-wrap">
+      <div class="loading" id="grid-loading">URLを設定してください</div>
+      <table class="progress-grid" id="progress-grid" style="display:none"></table>
+    </div>
+  </div>
+
+  <!-- LOG TAB -->
+  <div id="tab-log" style="display:none">
+    <table class="log-table" id="log-table">
+      <thead>
+        <tr>
+          <th>時刻</th>
+          <th>名前</th>
+          <th>Unit</th>
+          <th>ステップ</th>
+          <th>スコア</th>
+          <th>所要時間</th>
+        </tr>
+      </thead>
+      <tbody id="log-body">
+        <tr><td colspan="6" class="loading">URLを設定してください</td></tr>
+      </tbody>
+    </table>
+  </div>
+</main>
+
+<script>
+// ── URL 管理 ──
+let URL_PROGRESS = localStorage.getItem('dash_url_progress') || '';
+let URL_LOG      = localStorage.getItem('dash_url_log')      || '';
+
+let progressData = []; // 生データ（ヘッダー含む）
+let logData      = [];
+let currentUnit  = 0;
+let searchQuery  = '';
+
+// 初期表示
+if (URL_PROGRESS) {
+  document.getElementById('setup-banner').style.display = 'none';
+  document.getElementById('url-progress').value = URL_PROGRESS;
+  document.getElementById('url-log').value      = URL_LOG;
+  loadData();
+}
+
+function saveURLs() {
+  URL_PROGRESS = document.getElementById('url-progress').value.trim();
+  URL_LOG      = document.getElementById('url-log').value.trim();
+  localStorage.setItem('dash_url_progress', URL_PROGRESS);
+  localStorage.setItem('dash_url_log',      URL_LOG);
+  document.getElementById('setup-banner').style.display = 'none';
+  loadData();
+}
+
+// ── データ読み込み ──
+async function loadData() {
+  document.getElementById('grid-loading').textContent = '読み込み中...';
+  document.getElementById('grid-loading').style.display = 'block';
+  document.getElementById('progress-grid').style.display = 'none';
+
+  try {
+    if (URL_PROGRESS) {
+      const res  = await fetch(URL_PROGRESS + '&cachebust=' + Date.now());
+      const text = await res.text();
+      progressData = parseCSV(text);
+      renderProgressGrid();
+    }
+    if (URL_LOG) {
+      const res  = await fetch(URL_LOG + '&cachebust=' + Date.now());
+      const text = await res.text();
+      logData = parseCSV(text);
+      renderLog();
+      updateStats();
+    }
+    document.getElementById('last-updated').textContent =
+      '最終更新: ' + new Date().toLocaleTimeString('ja-JP');
+    document.getElementById('data-info').textContent =
+      `学生 ${progressData.length - 1} 名 / ログ ${logData.length - 1} 件`;
+  } catch(e) {
+    document.getElementById('grid-loading').textContent =
+      'エラー: ' + e.message + ' — URLを確認してください';
+  }
+}
+
+// ── CSV パーサー ──
+function parseCSV(text) {
+  return text.trim().split('\n').map(row => {
+    const result = [];
+    let inQuote = false, cell = '';
+    for (const ch of row) {
+      if (ch === '"') { inQuote = !inQuote; }
+      else if (ch === ',' && !inQuote) { result.push(cell); cell = ''; }
+      else { cell += ch; }
+    }
+    result.push(cell);
+    return result;
+  });
+}
+
+// ── 進捗マトリクス描画 ──
+function renderProgressGrid() {
+  if (!progressData.length) return;
+  const table  = document.getElementById('progress-grid');
+  const header = progressData[0];
+  const rows   = progressData.slice(1);
+
+  // フィルタ
+  const filtered = rows.filter(r => {
+    const name = r[0] || '';
+    const matchSearch = !searchQuery || name.includes(searchQuery);
+    return matchSearch;
+  });
+
+  // ヘッダー行
+  let html = '<thead><tr>';
+  html += `<th class="name-col">名前</th>`;
+  header.slice(1).forEach((h, i) => {
+    const isUnitHeader = h && h.match(/^U\d{2}-①/);
+    html += `<th class="${isUnitHeader?'unit-header':''}">${h||''}</th>`;
+  });
+  html += '<th>合計</th><th>達成率</th></tr></thead>';
+
+  // データ行
+  html += '<tbody>';
+  const totalSteps = (header.length - 1); // 名前列除く
+  filtered.forEach(row => {
+    const name  = row[0] || '';
+    const cells = row.slice(1);
+    const done  = cells.filter(c => c === '✅').length;
+    const pct   = totalSteps > 0 ? Math.round(done / totalSteps * 100) : 0;
+
+    html += `<tr>`;
+    html += `<td class="name-cell">${esc(name)}</td>`;
+    cells.forEach(c => {
+      html += `<td>${c === '✅' ? '<span class="check">✅</span>' : '<span class="empty">·</span>'}</td>`;
+    });
+    html += `<td class="total-cell">${done}</td>`;
+    html += `<td><div style="font-family:'JetBrains Mono',monospace;font-size:.65rem;color:var(--muted)">${pct}%</div><div class="pct-bar"><div class="pct-fill" style="width:${pct}%"></div></div></td>`;
+    html += `</tr>`;
+  });
+  html += '</tbody>';
+
+  table.innerHTML = html;
+  document.getElementById('grid-loading').style.display = 'none';
+  table.style.display = 'table';
+}
+
+// ── ログ描画 ──
+function renderLog() {
+  if (!logData.length) return;
+  const rows = logData.slice(1).reverse(); // 新しい順
+  const tbody = document.getElementById('log-body');
+
+  tbody.innerHTML = rows.slice(0, 200).map(r => {
+    const [ts, name, unit, step, stepName, score, total, elapsed] = r;
+    const stepClass = ['','step-1','step-2','step-3','step-4'][parseInt(step)] || '';
+    const pct = total ? Math.round(score/total*100) : null;
+    const scoreClass = pct === null ? '' : pct >= 80 ? 'score-good' : pct >= 60 ? 'score-mid' : 'score-low';
+    const scoreText  = total ? `<span class="${scoreClass}">${score}/${total} (${pct}%)</span>` : '—';
+    return `<tr>
+      <td class="ts">${formatTS(ts)}</td>
+      <td>${esc(name)}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.72rem">U${unit||'--'}</td>
+      <td><span class="log-step ${stepClass}">step ${step||'?'} ${esc(stepName)}</span></td>
+      <td>${scoreText}</td>
+      <td style="font-family:'JetBrains Mono',monospace;font-size:.68rem;color:var(--muted)">${elapsed ? elapsed+'秒' : '—'}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── 統計 ──
+function updateStats() {
+  const students  = Math.max(0, progressData.length - 1);
+  const logRows   = logData.slice(1);
+  const completed = logRows.length;
+
+  // 今日のアクセス
+  const today  = new Date().toLocaleDateString('ja-JP');
+  const todayCt = logRows.filter(r => {
+    try { return new Date(r[0]).toLocaleDateString('ja-JP') === today; } catch(e){ return false; }
+  }).length;
+
+  // 平均完了率
+  let avgPct = 0;
+  if (progressData.length > 1) {
+    const totalSteps = progressData[0].length - 1;
+    const rows = progressData.slice(1);
+    const sum  = rows.reduce((acc, r) => acc + r.slice(1).filter(c=>c==='✅').length, 0);
+    avgPct = totalSteps > 0 ? Math.round(sum / rows.length / totalSteps * 100) : 0;
+  }
+
+  document.getElementById('stat-students').textContent  = students;
+  document.getElementById('stat-completed').textContent = completed;
+  document.getElementById('stat-avg').textContent       = avgPct + '%';
+  document.getElementById('stat-today').textContent     = todayCt;
+}
+
+// ── フィルタ ──
+function filterUnit(u, btn) {
+  currentUnit = u;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProgressGrid();
+}
+function filterName(q) {
+  searchQuery = q;
+  renderProgressGrid();
+}
+
+// ── タブ切り替え ──
+function showTab(name) {
+  document.getElementById('tab-progress').style.display = name === 'progress' ? 'block' : 'none';
+  document.getElementById('tab-log').style.display      = name === 'log'      ? 'block' : 'none';
+  document.querySelectorAll('.tab').forEach((t,i) => {
+    t.classList.toggle('active', (i===0&&name==='progress')||(i===1&&name==='log'));
+  });
+}
+
+// ── CSV エクスポート ──
+function exportCSV() {
+  if (!progressData.length) return;
+  const csv = progressData.map(r => r.map(c => `"${c}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF'+csv], {type:'text/csv;charset=utf-8'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = `grammar_progress_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+
+// ── ユーティリティ ──
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function formatTS(ts) {
+  try {
+    const d = new Date(ts);
+    return d.toLocaleDateString('ja-JP',{month:'2-digit',day:'2-digit'}) + ' '
+         + d.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit'});
+  } catch(e){ return ts||''; }
+}
+
+// 自動更新（5分ごと）
+setInterval(loadData, 5 * 60 * 1000);
+</script>
+</body>
+</html>
